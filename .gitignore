@@ -24,3 +24,4 @@ assets/img/breaks.jpg
 
 # superseded: the three.js hero was replaced by a generated image
 js/hero.js
+.vercel

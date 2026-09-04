@@ -2,9 +2,12 @@
 
 <!-- impeccable:design-schema 1 -->
 
+Live: https://scalable-watermarking.vercel.app
+Repo: https://github.com/geraldho81/Scalable-watermarking
+
 ## What this is
 
-A cinematic long-read. Four generated images carry a dark visual spine: a full-bleed hero, then three full-bleed chapter openers, with a dark statement band for the twenty-million-response result. Between them the article body is white, one reading measure, typography-led. Dark beat, light read, dark beat.
+An all-black cinematic long-read. Four generated images carry a dark visual spine: a full-bleed hero, then three full-bleed chapter openers, with a dark statement band for the twenty-million-response result. Between them the article body is white, one reading measure, typography-led. Dark beat, light read, dark beat.
 
 The rhythm is the design. Nothing decorative sits in the reading columns; everything expressive happens in the full-bleed bands.
 
@@ -12,7 +15,7 @@ The earlier version built a "film cutting room" world with a light-table palette
 
 ## Imagery
 
-Four images, generated through the Grok CLI as one coherent series and stored in `assets/img/` at 1920-2560px wide (`@2x` files are the ones referenced; the 1280px originals beside them are unused source and can be deleted).
+Twelve images, generated through the Grok CLI as one coherent series and stored in `assets/img/` at 1920-2560px wide (`@2x` files are the ones referenced; the 1280px originals beside them are unused source and can be deleted).
 
 | File | Where | What it shows |
 |---|---|---|
