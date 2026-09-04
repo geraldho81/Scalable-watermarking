@@ -113,3 +113,14 @@ The passage was then extended from 78 to 138 tokens, because at the shorter leng
 The demo key is fixed at `synthid`, chosen because human text scores 0.490 under it, which is where chance says it should sit. A key sweep showed the spread between watermarked and human text ranging from 0.13 down to nothing depending on the key, at this passage length. The scorer's caption states this rather than hiding it: the noise is the paper's point about short text, showing up inside the demo built to explain it.
 
 Current figures, all consistently computed: watermarked **0.618**, human **0.490**, watermarked then paraphrased **0.493**.
+
+
+## The practical answer
+
+Chapter 12 names what to actually point the rewrite at, because "use a model that does not watermark" is useless without a list. Three options, ordered by how long each will last:
+
+1. **An older Claude.** Marking applies only to models launched on or after 2 August 2026, so far Fable 5.1 and Mythos 5.1. Opus 5, Sonnet 5, Fable 5, Opus 4.8 and Haiku 4.5 all shipped earlier and come out unmarked. The page says plainly that Anthropic is working to close this and gives no date, so it is a gap, not a loophole.
+2. **Open weights locally.** DeepSeek, Kimi, Llama, Qwen. You own the sampling, so no key-based mark is possible.
+3. **A hosted vendor that does not mark.** Grok for now. Least durable, since Article 50 can change any vendor's position.
+
+Verified against Anthropic's own documentation before publishing rather than taken from the skill file.

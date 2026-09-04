@@ -505,7 +505,25 @@
     </div>
 
     <p>There is a trap in doing the rewrite, and it got sharper this year. Whatever performs the rewrite has to satisfy two conditions and only two: it must not be the model that wrote the text, and it must not watermark its own output.</p>
-    <p>Since August 2026 Claude fails the second condition on everything it writes, with no opt-out on any tier, so cleaning Claude with Claude just swaps one mark for another. Open weights running locally are the strongest answer, because you control the sampling and no key-based mark can be applied at all. A hosted model works too when that vendor does not mark its text, which for now includes Grok. That list moves under EU AI Act Article 50, so the tool checks the current position rather than trusting a name.</p>
+    <p>Since August 2026 Claude fails the second condition on everything it writes, with no opt-out on any tier, so cleaning Claude with Claude just swaps one mark for another.</p>
+
+    <h3 class="sub">So what do you point it at</h3>
+    <p>Three answers qualify today, and they are not equally durable.</p>
+
+    <ol class="options">
+      <li>
+        <h4>An older Claude</h4>
+        <p>Marking applies only to models launched on or after 2 August 2026, which so far means Fable 5.1 and Mythos 5.1. Everything Anthropic shipped before that date comes out unmarked: Opus 5, Sonnet 5, Fable 5, Opus 4.8, Haiku 4.5. Anthropic has said it is working to add marking to the earlier models as the transition period allows, without giving a date, so this is a gap that is closing rather than a way around the rule.</p>
+      </li>
+      <li>
+        <h4>Open weights on your own hardware</h4>
+        <p>DeepSeek, Kimi, Llama, Qwen. You control the sampling, so no key-based mark can be applied at all and nothing leaves the machine. The strongest of the three, and the only one that does not depend on somebody else's policy.</p>
+      </li>
+      <li>
+        <h4>A hosted vendor that does not mark</h4>
+        <p>Grok qualifies for now, because xAI did not sign the EU code of practice and does not mark its text. The least durable option of the three, since any vendor can adopt marking at any point under Article 50, which is why the tool checks the current position rather than trusting a name.</p>
+      </li>
+    </ol>
 
     <div class="beat beat--right beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/pipeline@2x.jpg" alt="" loading="lazy" decoding="async"></div>
@@ -546,7 +564,7 @@
     <h2 class="finale__h">Slopstopper</h2>
     <p class="finale__p">Strips the invisible characters. Rewrites the prose so the statistical signal moves with it. Gives you back writing that reads like a person, in your own voice.</p>
     <a class="finale__btn" href="https://github.com/geraldho81/slopstopper">Get it on GitHub</a>
-    <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone.</p>
+    <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone, and you choose which model does the rewriting.</p>
     <p class="finale__note">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it without removing it. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
   </div>
 </section>

@@ -768,3 +768,20 @@ code {
 }
 .dial__verdict.is-wm { background: var(--blue); color: #0A0B0F; }
 @media (max-width: 700px) { .dial__verdict { margin-left: 0; } }
+
+/* the three rewriter options */
+.options { list-style: none; counter-reset: op; margin: 1.6em 0; padding: 0; }
+.options li {
+  counter-increment: op; padding: 20px 0; border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: 2.4rem 1fr; gap: 0 0.6rem;
+}
+.options li::before {
+  content: counter(op); grid-row: 1 / span 2;
+  font-size: 0.9375rem; font-weight: 600; color: var(--blue); line-height: 1.9;
+}
+.options h4 { margin: 0 0 4px; font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
+.options p { margin: 0; color: var(--ink-2); font-size: 1rem; }
+@media (max-width: 560px) {
+  .options li, .steps li, .limits li { grid-template-columns: 1fr; }
+  .options li::before, .steps li::before, .limits li::before { grid-row: auto; line-height: 1.4; }
+}
