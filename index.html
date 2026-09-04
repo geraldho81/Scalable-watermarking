@@ -48,7 +48,7 @@
     </div>
     <div class="hero__body">
       <h1 class="hero__h">Every word an AI writes was chosen out of thousands.</h1>
-      <p class="hero__stand">Some of those choices are a signature. This is how Google DeepMind hid one inside Gemini, why twenty million people did not notice, and how anyone holding the key can read it back without ever touching the model.</p>
+      <p class="hero__stand">Some of those choices are a signature. This is how Google DeepMind hid one inside Gemini, why twenty million people did not notice, and how anyone with the key can read it back without touching the model.</p>
       <p class="hero__by">A reading of <cite>Scalable watermarking for identifying large language model outputs</cite>, Dathathri et al., <em>Nature</em> 634, 818-823, 23 October 2024. Roughly 15 minutes.</p>
     </div>
     <a class="hero__cue" href="#s01"><span>Start reading</span><svg viewBox="0 0 20 28" aria-hidden="true"><path d="M10 1 v22 M3 17 l7 8 7-8"/></svg></a>
@@ -64,8 +64,8 @@
       </div>
     </div>
     <p>Ask a model to finish <em>my favourite tropical fruit is</em> and it does not reach for an answer. It builds a list.</p>
-    <p>Then it picks one off the list, sticks it on the end, throws the list away, and builds a brand new one from scratch for the next word. Every sentence you have ever read from an AI was assembled this way, one draw at a time.</p>
-    <p>Which means that for every word that made it onto the page, thousands were considered and thrown out. That discarding is the opening.</p>
+    <p>Then it picks one, sticks it on the end, throws the list away, and builds a new one for the next word. Every sentence you have read from an AI was assembled this way, one draw at a time.</p>
+    <p>So for every word that reached the page, thousands were considered and thrown out. That discarding is the opening.</p>
 
     <figure class="fig">
       <table class="odds">
@@ -90,9 +90,9 @@
         <p class="beat__k">Archives do not scale. Detectors accuse the wrong people.</p>
       </div>
     </div>
-    <p>One approach is to store every piece of text every model has ever produced, then check new writing against the archive. It works, in the sense that a phone book works. It also means retaining all of it, forever, with every privacy problem that follows, and coordinating that archive across every company running a model.</p>
-    <p>The other approach is a classifier that reads text and guesses. These go stale every time models improve, they are expensive to keep retraining, and they perform badly on writing they were not trained for. They also misfire hardest on people writing in a language that is not their first. Students have been accused of cheating on the strength of that output.</p>
-    <p>So the paper changes the question. Instead of trying to recognise AI text afterwards, can something be left behind while the text is being written?</p>
+    <p>One approach is to store everything every model has produced, then check new writing against the archive. It works the way a phone book works. It also means keeping all of it forever, with every privacy problem that follows, and coordinating that archive across every company running a model.</p>
+    <p>The other is a classifier that reads text and guesses. These go stale every time models improve, cost money to retrain, and perform badly on writing they were not trained for. They misfire hardest on people writing in a second language. Students have been accused of cheating on that output.</p>
+    <p>So the paper changes the question. Instead of recognising AI text afterwards, can something be left behind as it is written?</p>
   </section>
 
   <section class="chapter chapter--beat" id="s03">
@@ -106,8 +106,8 @@
     </div>
     <p>Here is the whole trick.</p>
     <p>The watermark is not added to the finished sentence. Nothing is swapped for a synonym. No invisible characters are stitched between the words. Anything done to text after it is written leaves scars, and a careful reader or a determined attacker finds them.</p>
-    <p>Instead, the watermark changes <em>how each word gets picked</em>. The model still draws from its own list. It just runs a contest first, and the contest is quietly rigged by a secret only the model's owner holds.</p>
-    <p>The text that comes out is text the model would have been happy to write anyway. It is only across a few hundred words that its choices start leaning in a direction that looks like nothing at all, unless you know exactly what to check.</p>
+    <p>Instead, the watermark changes <em>how each word gets picked</em>. The model still draws from its own list. It just runs a contest first, rigged by a secret only the model's owner holds.</p>
+    <p>The text that comes out is text the model would have written anyway. Only across a few hundred words do its choices start leaning in a direction that looks like nothing at all, unless you know what to check.</p>
 
     <figure class="fig fig--wide">
       <div class="twoup">
@@ -135,15 +135,15 @@
       </div>
     </div>
     <p>Take the last four words written so far. Mix them with a secret key that never leaves the company. Out comes a number: the seed.</p>
-    <p>The seed is not random the way a thrown dice is random. It is <em>repeatable</em>. The same four words plus the same key produce the same seed on any machine, forever. That is the entire reason detection can work later, without the model and without asking anybody's permission.</p>
-    <p>The seed then hands every word in the model's vocabulary a score. In the paper's default setting that score is brutally simple: a zero or a one. A coin, flipped in advance, for every word in the language. <em>mango</em> might get a 1. <em>lychee</em> might get a 0. Change a single one of the four preceding words and every coin in the language flips again.</p>
+    <p>The seed is not random the way a thrown dice is random. It is <em>repeatable</em>. The same four words and the same key produce the same seed on any machine, forever. That is the whole reason detection works later, without the model and without anybody's permission.</p>
+    <p>The seed then hands every word in the model's vocabulary a score. In the paper's default setting that score is a zero or a one: a coin, flipped in advance, for every word in the language. <em>mango</em> might get a 1, <em>lychee</em> a 0. Change one of the four preceding words and every coin flips again.</p>
 
     <figure class="fig fig--full" id="dice">
       <div class="tool">
         <div class="tool__row">
           <label class="tool__label" for="diceInput">The last four words</label>
           <input class="tool__input" id="diceInput" type="text" value="my favourite tropical fruit" autocomplete="off" spellcheck="false" aria-describedby="diceHelp">
-          <p class="tool__help" id="diceHelp">Change any word and watch every coin in the vocabulary flip. Type the same four words back and they all flip back, exactly, every time.</p>
+          <p class="tool__help" id="diceHelp">Change any word and every coin flips. Type the same four words back and they all flip back, exactly, every time.</p>
         </div>
         <div class="tool__row tool__row--seed">
           <span class="tool__label">Seed</span>
@@ -152,7 +152,7 @@
         <div class="coins__head"><span class="tool__label">A sample of the vocabulary</span><output class="coins__tally" id="diceTally" for="diceInput"></output></div>
         <ul class="coins" id="diceCoins" aria-live="polite"></ul>
       </div>
-      <figcaption>Sixty-four words out of a vocabulary of tens of thousands, all assigned in one pass. The paper runs several independent sets of these coins at once and calls them g-values, written g<sub>1</sub> through g<sub>m</sub>. You are about to see why it needs more than one set.</figcaption>
+      <figcaption>Sixty-four words out of a vocabulary of tens of thousands, assigned in one pass. The paper runs several independent sets of these coins at once and calls them g-values, g<sub>1</sub> through g<sub>m</sub>. You are about to see why it needs more than one.</figcaption>
     </figure>
   </section>
 
@@ -165,7 +165,7 @@
       <p class="beat__k">A knockout bracket decides every word an AI writes.</p>
     </div>
   </div>
-    <p>When it is time to write the next word, the model does not draw once. It draws eight times from its own list, and puts the eight into a knockout bracket. Scroll to run the draw.</p>
+    <p>When it is time to write the next word, the model does not draw once. It draws eight times from its own list and puts them into a knockout bracket. Scroll to run the draw.</p>
 
     <figure class="fig fig--full" id="bracket" data-tournament="scroll">
       <div class="bracket">
@@ -186,8 +186,8 @@
       <figcaption>Tournament sampling, the paper's Algorithm 2, at the three-layer depth used in its Figure 2.</figcaption>
     </figure>
 
-    <p><b>Round one.</b> Four pairs. In each pair, the word holding the higher coin under the first set of dice wins. Ties are settled at random. <b>Round two.</b> The four survivors pair off again, judged by a second, independent set of dice. <b>Round three.</b> The last two, a third set. The survivor is written to the page. The other seven are thrown out, and there they stay.</p>
-    <p>Nothing was forced. All eight entrants were drawn from the model's own ranked list, so whichever one wins is something the model was already willing to say. But the winner also had to keep winning coin flips, and a word that wins three coin flips in a row is not the sort of accident you find in ordinary writing.</p>
+    <p><b>Round one.</b> Four pairs. In each pair the word holding the higher coin under the first set of dice wins, and ties are settled at random. <b>Round two.</b> The four survivors pair off again under a second, independent set. <b>Round three.</b> The last two, a third set. The survivor goes on the page. The other seven are thrown out, and there they stay.</p>
+    <p>Nothing was forced. All eight entrants came from the model's own ranked list, so whichever wins is something it was already willing to say. But the winner also had to keep winning coin flips, and three in a row is not the sort of accident you find in ordinary writing.</p>
     <p class="pull">Do that four hundred times and you have four hundred small coincidences, all pointing the same way.</p>
   </section>
 
@@ -201,8 +201,8 @@
       </div>
     </div>
     <p>The obvious worry is that rigging the choice damages the writing.</p>
-    <p>The paper's answer is that the tournament never introduces a word the model would not have picked. All eight entrants came from its own distribution, so rigging which of them wins does not smuggle anything foreign onto the page.</p>
-    <p>Then they tested it in the open, which is the part that makes this a production paper rather than a proposal. A random slice of real Gemini traffic, then called Bard, was quietly served by the watermarked model. Roughly twenty million responses in, they compared the thumbs-up and thumbs-down that real people had left on both.</p>
+    <p>The paper's answer is that the tournament never introduces a word the model would not have picked. All eight came from its own distribution, so rigging which one wins smuggles nothing foreign onto the page.</p>
+    <p>Then they tested it in the open, which is what makes this a production paper rather than a proposal. A random slice of real Gemini traffic, then called Bard, was served by the watermarked model. Twenty million responses in, they compared the thumbs-up and thumbs-down real people had left on both.</p>
 
     <div class="band">
       <div class="band__inner">
@@ -216,7 +216,7 @@
     </div>
 
 
-    <p>They ran a controlled version too: 3,000 questions, watermarked and unwatermarked answers side by side, human raters scoring grammar and coherence, relevance, correctness, helpfulness and overall quality. No significant preference either way, on any of the five.</p>
+    <p>They ran a controlled version too: 3,000 questions, watermarked and unwatermarked answers side by side, raters scoring grammar and coherence, relevance, correctness, helpfulness and overall quality. No significant preference either way, on any of the five.</p>
   </section>
 
   <section class="chapter chapter--beat" id="s07">
@@ -228,9 +228,9 @@
       <p class="beat__k">The text and the key. Never the model.</p>
     </div>
   </div>
-    <p>To check a piece of text you need two things: the text, and the key. You do not need the model. You do not need to run anything expensive. You do not need to ask Google.</p>
-    <p>Walk the text word by word. At each word, take the four words before it, mix in the key, get the seed, and look up which coin that word was handed. Write down the zero or the one. Do that for every word and every set of dice, then take the average.</p>
-    <p>Text nobody watermarked averages about 0.5, because nobody was steering the coins. Watermarked text averages higher, because every word on the page won its way there by winning coin flips. Then you draw a line and say: above this, watermarked.</p>
+    <p>To check a piece of text you need the text and the key. You do not need the model. You do not need to run anything expensive. You do not need to ask Google.</p>
+    <p>Walk the text word by word. At each one, take the four words before it, mix in the key, get the seed, and look up which coin that word was handed. Write down the zero or the one. Do that for every word and every set of dice, then take the average.</p>
+    <p>Text nobody watermarked averages about 0.5, because nobody was steering the coins. Watermarked text averages higher, because every word on the page won its way there. Then you draw a line and say: above this, watermarked.</p>
 
     <figure class="fig fig--wide" id="scorer" data-tournament="score">
       <div class="scorer">
@@ -273,8 +273,8 @@
       </div>
     </div>
     <p><b>Length.</b> Every word adds one more small piece of evidence, and none of them is worth much alone. Forty words is close to a coin flip. Four hundred words is close to certain.</p>
-    <p><b>Freedom.</b> This one is the real limit. Ask <em>what is the capital of France</em> and there is one answer. The model's list has a single word on it with any weight at all. The tournament has nothing to choose between, so there is nothing to encode, and no watermark survives.</p>
-    <p>Ask for a story, an explanation, an argument, and the list is wide open. Hundreds of reasonable next words, and every choice among them is somewhere to leave a mark. The paper's word for this is entropy.</p>
+    <p><b>Freedom.</b> This one is the real limit. Ask <em>what is the capital of France</em> and there is one answer. The model's list has a single word on it with any weight. The tournament has nothing to choose between, so nothing gets encoded and no watermark survives.</p>
+    <p>Ask for a story, an explanation, an argument, and the list is wide open. Hundreds of reasonable next words, every choice among them somewhere to leave a mark. The paper's word for this is entropy.</p>
 
     <figure class="fig fig--wide">
       <div data-chart="detectability"></div>
@@ -296,8 +296,8 @@
         <p class="beat__k">Thirty rounds deep, and it costs 0.088 milliseconds a word.</p>
       </div>
     </div>
-    <p>A watermark that slows the model down does not get deployed, whatever its merits. Much of this paper is really an engineering paper about that.</p>
-    <p>In production the tournament runs thirty rounds deep, not three. More rounds means more coin flips per word, which means more evidence and a steadier score. The benefit tails off with depth, so thirty is a chosen stopping point rather than a limit.</p>
+    <p>A watermark that slows the model down does not get deployed, whatever its merits. Much of this paper is an engineering paper about that.</p>
+    <p>In production the tournament runs thirty rounds deep, not three. More rounds means more coin flips per word, so more evidence and a steadier score. The benefit tails off with depth, so thirty is a chosen stopping point rather than a limit.</p>
     <p>They also fitted it to speculative sampling, the trick where a small fast model guesses several words ahead and the big model checks its work. That combination is how large systems actually run, and nobody had made watermarking work with it before. SynthID-Text runs in Gemini and Gemini Advanced today, and the code is public.</p>
 
     <figure class="fig fig--wide">
@@ -315,15 +315,15 @@
       <p class="beat__k">Paraphrase it and the signature is gone.</p>
     </div>
   </div>
-    <p>The paper is unusually direct about its own limits, and any honest reading has to carry them. They decide what the method is actually for.</p>
+    <p>The paper is unusually direct about its own limits, and any honest reading has to carry them. They decide what the method is for.</p>
     <ol class="limits">
       <li><h3>Paraphrasing removes it</h3><p>Run watermarked text through another model and ask for a rewrite, and the mark mostly goes. Heavy editing by hand does the same. Light edits survive, because the score is an average and a few changed words barely move it.</p></li>
-      <li><h3>It only works if the writer cooperates</h3><p>The watermark has to be applied at the moment of generation, by whoever is running the model. Anyone running an open-weight model on their own hardware simply does not switch it on. The paper names this directly as a problem that gets harder as open models spread.</p></li>
-      <li><h3>It can be attacked</h3><p>Stealing, spoofing and scrubbing are live research problems. Someone able to probe the system enough might learn the pattern well enough to strip it out, or worse, to stamp it onto text a human actually wrote.</p></li>
+      <li><h3>It only works if the writer cooperates</h3><p>The watermark has to be applied at the moment of generation, by whoever is running the model. Anyone running an open-weight model on their own hardware does not switch it on. The paper names this as a problem that gets harder as open models spread.</p></li>
+      <li><h3>It can be attacked</h3><p>Stealing, spoofing and scrubbing are live research problems. Someone able to probe the system enough might learn the pattern well enough to strip it out, or worse, stamp it onto text a human wrote.</p></li>
       <li><h3>Short text carries nothing</h3><p>A sentence has almost no evidence in it. A tweet is out of reach. So is a headline, a caption, or a factual answer with only one sensible phrasing.</p></li>
       <li><h3>It is not an AI detector</h3><p>It answers <em>did this particular system write this</em>. It does not answer <em>was this written by AI</em>. Those are different questions, and the second one still has no good answer.</p></li>
     </ol>
-    <p>The authors' own framing: generative watermarking is complementary to the other approaches rather than a replacement for them, and no text detection method is foolproof. What they have shown is that one of these methods can run at the scale of a real product without making it worse.</p>
+    <p>The authors' own framing: generative watermarking complements the other approaches rather than replacing them, and no text detection method is foolproof. What they have shown is that one of these can run at the scale of a real product without making it worse.</p>
   </section>
 
   <section class="chapter chapter--beat" id="s11">
@@ -371,7 +371,7 @@
           <p class="bench__hint" id="benchHint">Turn the watermark off and run it again with the same key. The words stay plausible, the score falls back to chance.</p>
         </div>
       </div>
-      <figcaption>There is no language model here. The candidate words at each position are written by hand, so read this as the mechanism made visible rather than a working watermarker. Every piece of arithmetic in it is real.</figcaption>
+      <figcaption>There is no language model here. The candidate words at each position are written by hand, so read this as the mechanism made visible, not a working watermarker. Every piece of arithmetic in it is real.</figcaption>
     </figure>
   </section>
 
@@ -387,9 +387,9 @@
 
     <p class="byline-own">Everything above this line is a reading of somebody else's research. This last part is mine.</p>
 
-    <p>In section 07 you moved a real score. Watermarked text sat at <b>0.607</b>. The same text, paraphrased, fell to <b>0.521</b>, close enough to chance that no threshold worth using would flag it. You ran that arithmetic yourself, on this page, a few thousand words ago.</p>
-    <p>It works because of the mechanism this whole page has been about. The mark is a record of which words got chosen, held in the choices themselves rather than stitched into the sentence. Replace the words and there is no longer a record. Which means the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
-    <p>Before any of that, though, there is a much dumber problem sitting in your text right now.</p>
+    <p>In section 07 you moved a real score. Watermarked text sat at <b>0.607</b>. Paraphrased, the same text fell to <b>0.521</b>, close enough to chance that no usable threshold would flag it. You ran that arithmetic yourself, a few thousand words ago.</p>
+    <p>It works because of the mechanism this whole page has been about. The mark is a record of which words got chosen, held in the choices themselves, not stitched into the sentence. Replace the words and there is no record. So the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
+    <p>Before any of that, there is a much dumber problem sitting in your text right now.</p>
 
     <div class="beat beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/twokinds@2x.jpg" alt="" loading="lazy" decoding="async"></div>
@@ -399,7 +399,7 @@
       </div>
     </div>
 
-    <p>People conflate these constantly, and the difference decides what you can actually do about them.</p>
+    <p>People conflate these constantly, and the difference decides what you can do about them.</p>
 
     <figure class="fig fig--wide">
       <table class="twokinds">
@@ -428,7 +428,7 @@
       </div>
     </div>
 
-    <p>The box below runs the same character tables that Slopstopper's <code>text_unicode.py</code> uses, here in your browser. Nothing is uploaded and nothing is stored. Emoji are left alone, because emoji are built out of joiners on purpose and stripping those breaks them.</p>
+    <p>The box below runs the same character tables as Slopstopper's <code>text_unicode.py</code>, here in your browser. Nothing is uploaded and nothing is stored. Emoji are left alone, because they are built out of joiners on purpose and stripping those breaks them.</p>
 
     <figure class="fig fig--full" id="strip">
       <div class="stripper">
@@ -460,12 +460,12 @@
       </div>
     </div>
 
-    <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that tells you it detected and removed one is lying to you.</p>
-    <p>Moving that signal means replacing the words, at the token level, across the whole piece. And there is a trap in doing it: a rewrite performed by a model that watermarks its own output just swaps one company's mark for another's.</p>
+    <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that claims it detected and removed one is lying to you.</p>
+    <p>Moving that signal means replacing the words, at the token level, across the whole piece. And there is a trap: a rewrite by a model that watermarks its own output just swaps one company's mark for another's.</p>
 
     <h3 class="sub">Which is what I built Slopstopper for</h3>
-    <p>It does both layers and keeps them separate, because they are different jobs. Layer A strips every character in the table above. Layer B is opt-in, and it is a real rewrite: token-level paraphrase, changed clause order, changed sentence boundaries, run through a model chosen because it does not mark its own output.</p>
-    <p>On the way through it also removes the things that make writing read as machine-written to a human rather than to a detector: the "it's not X, it's Y" tic, em dashes, throat-clearing openers, fake-profound closers, the rule of three. Your facts, numbers and voice stay.</p>
+    <p>It does both layers and keeps them separate, because they are different jobs. Layer A strips every character in the table above. Layer B is opt-in and is a real rewrite: token-level paraphrase, changed clause order, changed sentence boundaries, run through a model chosen because it does not mark its own output.</p>
+    <p>On the way through it removes what makes writing read as machine-written to a human rather than to a detector. The "it's not X, it's Y" tic, em dashes, throat-clearing openers, fake-profound closers, the rule of three. Your facts, numbers and voice stay.</p>
   </section>
 
 </article>
@@ -478,7 +478,7 @@
     <p class="finale__p">Strips the invisible characters. Rewrites the prose so the statistical signal moves with it. Gives you back writing that reads like a person, in your own voice.</p>
     <a class="finale__btn" href="https://github.com/geraldho81/slopstopper">Get it on GitHub</a>
     <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone.</p>
-    <p class="finale__note">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it rather than guaranteeing its removal. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
+    <p class="finale__note">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it without removing it. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
   </div>
 </section>
 
