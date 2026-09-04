@@ -1,0 +1,23 @@
+# working files from the design process
+.impeccable/
+.vercel/
+
+# the source paper, 4MB and available at the DOI
+*.pdf
+
+# unused 1x source renders; the @2x files are the ones the site uses
+assets/img/list.jpg
+assets/img/indistinguishable.jpg
+assets/img/choosing.jpg
+assets/img/key.jpg
+assets/img/scale.jpg
+assets/img/entropy.jpg
+assets/img/production.jpg
+assets/img/bench.jpg
+assets/img/hero.jpg
+assets/img/hero-hi.jpg
+assets/img/tournament.jpg
+assets/img/detection.jpg
+assets/img/breaks.jpg
+
+.DS_Store

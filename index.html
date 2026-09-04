@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Word at a Time: how a watermark hides inside AI writing</title>
+<meta name="description" content="A reading of SynthID-Text, the text watermarking scheme published in Nature in October 2024. How Google DeepMind hid a signature inside the way Gemini chooses its words, and how anyone with the key can read it back.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<a class="skip" href="#s01">Skip to the article</a>
+<div class="progress" id="railProgress" aria-hidden="true"></div>
+
+<header class="topbar" id="rail">
+  <a class="topbar__mark" href="#top">One Word at a Time</a>
+  <nav class="topbar__nav" aria-label="Contents">
+    <ol class="topbar__list" id="railFrames">
+      <li><a href="#s01" data-rail="s01"><span class="rail__n">01</span> How AI writes</a></li>
+      <li><a href="#s02" data-rail="s02"><span class="rail__n">02</span> Why you cannot tell</a></li>
+      <li><a href="#s03" data-rail="s03"><span class="rail__n">03</span> The move</a></li>
+      <li><a href="#s04" data-rail="s04"><span class="rail__n">04</span> The secret dice</a></li>
+      <li><a href="#s05" data-rail="s05"><span class="rail__n">05</span> The tournament</a></li>
+      <li><a href="#s06" data-rail="s06"><span class="rail__n">06</span> Quality</a></li>
+      <li><a href="#s07" data-rail="s07"><span class="rail__n">07</span> Reading the mark</a></li>
+      <li><a href="#s08" data-rail="s08"><span class="rail__n">08</span> Room to hide</a></li>
+      <li><a href="#s09" data-rail="s09"><span class="rail__n">09</span> Shipping it</a></li>
+      <li><a href="#s10" data-rail="s10"><span class="rail__n">10</span> Where it breaks</a></li>
+      <li><a href="#s11" data-rail="s11"><span class="rail__n">11</span> Run it yourself</a></li>
+    </ol>
+  </nav>
+  <button class="topbar__toggle" id="railToggle" aria-expanded="false" aria-controls="railFrames">
+    Contents <span class="topbar__count"><span id="railCurrent">01</span>/11</span>
+  </button>
+</header>
+
+<article class="doc">
+
+  <header class="hero" id="top">
+    <div class="hero__media" aria-hidden="true">
+      <img src="assets/img/hero@2x.jpg" alt="" fetchpriority="high" decoding="async">
+    </div>
+    <div class="hero__body">
+      <h1 class="hero__h">Every word an AI writes was chosen out of thousands.</h1>
+      <p class="hero__stand">Some of those choices are a signature. This is how Google DeepMind hid one inside Gemini, why twenty million people did not notice, and how anyone holding the key can read it back without ever touching the model.</p>
+      <p class="hero__by">A reading of <cite>Scalable watermarking for identifying large language model outputs</cite>, Dathathri et al., <em>Nature</em> 634, 818-823, 23 October 2024. Roughly 15 minutes.</p>
+    </div>
+    <a class="hero__cue" href="#s01"><span>Start reading</span><svg viewBox="0 0 20 28" aria-hidden="true"><path d="M10 1 v22 M3 17 l7 8 7-8"/></svg></a>
+  </header>
+
+  <section class="chapter chapter--beat" id="s01">
+    <div class="beat">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/list@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">01</span>
+        <h2 class="beat__h">It never writes a sentence. It writes a word.</h2>
+        <p class="beat__k">It builds a ranked list, picks one, throws the list away, and starts again.</p>
+      </div>
+    </div>
+    <p>Ask a model to finish <em>my favourite tropical fruit is</em> and it does not reach for an answer. It builds a list.</p>
+    <p>Then it picks one off the list, sticks it on the end, throws the list away, and builds a brand new one from scratch for the next word. Every sentence you have ever read from an AI was assembled this way, one draw at a time.</p>
+    <p>Which means that for every word that made it onto the page, thousands were considered and thrown out. That discarding is the opening.</p>
+
+    <figure class="fig">
+      <table class="odds">
+        <thead><tr><th scope="col">Candidate</th><th scope="col">Bar</th><th scope="col">Model's own odds</th></tr></thead>
+        <tbody>
+          <tr style="--p:50"><th scope="row">mango</th><td><span class="odds__bar"></span></td><td class="odds__v">0.50</td></tr>
+          <tr style="--p:30"><th scope="row">lychee</th><td><span class="odds__bar"></span></td><td class="odds__v">0.30</td></tr>
+          <tr style="--p:15"><th scope="row">papaya</th><td><span class="odds__bar"></span></td><td class="odds__v">0.15</td></tr>
+          <tr style="--p:5"><th scope="row">durian</th><td><span class="odds__bar"></span></td><td class="odds__v">0.05</td></tr>
+        </tbody>
+      </table>
+      <figcaption>The model's ranked list for the next word. Figures follow the paper's own worked example in Figure 2. The paper calls this autoregressive sampling.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s02">
+    <div class="beat beat--right">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/indistinguishable@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">02</span>
+        <h2 class="beat__h">The obvious answers do not work.</h2>
+        <p class="beat__k">Archives do not scale. Detectors accuse the wrong people.</p>
+      </div>
+    </div>
+    <p>One approach is to store every piece of text every model has ever produced, then check new writing against the archive. It works, in the sense that a phone book works. It also means retaining all of it, forever, with every privacy problem that follows, and coordinating that archive across every company running a model.</p>
+    <p>The other approach is a classifier that reads text and guesses. These go stale every time models improve, they are expensive to keep retraining, and they perform badly on writing they were not trained for. They also misfire hardest on people writing in a language that is not their first. Students have been accused of cheating on the strength of that output.</p>
+    <p>So the paper changes the question. Instead of trying to recognise AI text afterwards, can something be left behind while the text is being written?</p>
+  </section>
+
+  <section class="chapter chapter--beat" id="s03">
+    <div class="beat">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/choosing@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">03</span>
+        <h2 class="beat__h">Do not mark the text. Mark the choosing.</h2>
+        <p class="beat__k">The mark goes into the choice, never into the sentence.</p>
+      </div>
+    </div>
+    <p>Here is the whole trick.</p>
+    <p>The watermark is not added to the finished sentence. Nothing is swapped for a synonym. No invisible characters are stitched between the words. Anything done to text after it is written leaves scars, and a careful reader or a determined attacker finds them.</p>
+    <p>Instead, the watermark changes <em>how each word gets picked</em>. The model still draws from its own list. It just runs a contest first, and the contest is quietly rigged by a secret only the model's owner holds.</p>
+    <p>The text that comes out is text the model would have been happy to write anyway. It is only across a few hundred words that its choices start leaning in a direction that looks like nothing at all, unless you know exactly what to check.</p>
+
+    <figure class="fig fig--wide">
+      <div class="twoup">
+        <div class="twoup__col">
+          <h3>Marking the text</h3>
+          <p class="twoup__demo">The <s>fruit</s> <ins>produce</ins> was ripe<span class="zw" title="an invisible character">&#9251;</span></p>
+          <p>Swaps in words the model did not choose, leaves artefacts a reader can spot, and degrades the writing to carry the signal.</p>
+        </div>
+        <div class="twoup__col twoup__col--on">
+          <h3>Marking the choosing</h3>
+          <p class="twoup__demo">The fruit was ripe</p>
+          <p>Every word came from the model's own list. Nothing is added, so there is nothing to find. The signal lives in <em>which</em> of its own words it picked.</p>
+        </div>
+      </div>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s04">
+    <div class="beat beat--right">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/key@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">04</span>
+        <h2 class="beat__h">The same four words always roll the same dice.</h2>
+        <p class="beat__k">Four words and a secret key decide every coin in the language.</p>
+      </div>
+    </div>
+    <p>Take the last four words written so far. Mix them with a secret key that never leaves the company. Out comes a number: the seed.</p>
+    <p>The seed is not random the way a thrown dice is random. It is <em>repeatable</em>. The same four words plus the same key produce the same seed on any machine, forever. That is the entire reason detection can work later, without the model and without asking anybody's permission.</p>
+    <p>The seed then hands every word in the model's vocabulary a score. In the paper's default setting that score is brutally simple: a zero or a one. A coin, flipped in advance, for every word in the language. <em>mango</em> might get a 1. <em>lychee</em> might get a 0. Change a single one of the four preceding words and every coin in the language flips again.</p>
+
+    <figure class="fig fig--full" id="dice">
+      <div class="tool">
+        <div class="tool__row">
+          <label class="tool__label" for="diceInput">The last four words</label>
+          <input class="tool__input" id="diceInput" type="text" value="my favourite tropical fruit" autocomplete="off" spellcheck="false" aria-describedby="diceHelp">
+          <p class="tool__help" id="diceHelp">Change any word and watch every coin in the vocabulary flip. Type the same four words back and they all flip back, exactly, every time.</p>
+        </div>
+        <div class="tool__row tool__row--seed">
+          <span class="tool__label">Seed</span>
+          <output class="seed" id="diceSeed" for="diceInput">0x00000000</output>
+        </div>
+        <div class="coins__head"><span class="tool__label">A sample of the vocabulary</span><output class="coins__tally" id="diceTally" for="diceInput"></output></div>
+        <ul class="coins" id="diceCoins" aria-live="polite"></ul>
+      </div>
+      <figcaption>Sixty-four words out of a vocabulary of tens of thousands, all assigned in one pass. The paper runs several independent sets of these coins at once and calls them g-values, written g<sub>1</sub> through g<sub>m</sub>. You are about to see why it needs more than one set.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s05">
+    <div class="beat">
+    <div class="beat__media" aria-hidden="true"><img src="assets/img/tournament@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="beat__body">
+      <span class="beat__n">05</span>
+      <h2 class="beat__h">Eight words go in. One comes out.</h2>
+      <p class="beat__k">A knockout bracket decides every word an AI writes.</p>
+    </div>
+  </div>
+    <p>When it is time to write the next word, the model does not draw once. It draws eight times from its own list, and puts the eight into a knockout bracket. Scroll to run the draw.</p>
+
+    <figure class="fig fig--full" id="bracket" data-tournament="scroll">
+      <div class="bracket">
+        <div class="bracket__layers" id="bracketLayers"></div>
+        <div class="bracket__out" id="bracketOut">
+          <span class="bracket__outLabel">Written to the page</span>
+          <span class="bracket__outWord" id="bracketWinner">waiting</span>
+        </div>
+      </div>
+      <div class="bin" id="bracketBin" aria-live="polite">
+        <span class="bin__label">Thrown out</span>
+        <div class="bin__pins" id="bracketPins"></div>
+      </div>
+      <div class="bracket__controls">
+        <button class="btn" id="bracketReplay" type="button">Run the draw again</button>
+        <p class="bracket__status" id="bracketStatus" role="status">Eight candidates waiting.</p>
+      </div>
+      <figcaption>Tournament sampling, the paper's Algorithm 2, at the three-layer depth used in its Figure 2.</figcaption>
+    </figure>
+
+    <p><b>Round one.</b> Four pairs. In each pair, the word holding the higher coin under the first set of dice wins. Ties are settled at random. <b>Round two.</b> The four survivors pair off again, judged by a second, independent set of dice. <b>Round three.</b> The last two, a third set. The survivor is written to the page. The other seven are thrown out, and there they stay.</p>
+    <p>Nothing was forced. All eight entrants were drawn from the model's own ranked list, so whichever one wins is something the model was already willing to say. But the winner also had to keep winning coin flips, and a word that wins three coin flips in a row is not the sort of accident you find in ordinary writing.</p>
+    <p class="pull">Do that four hundred times and you have four hundred small coincidences, all pointing the same way.</p>
+  </section>
+
+  <section class="chapter chapter--beat" id="s06">
+    <div class="beat beat--right">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/scale@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">06</span>
+        <h2 class="beat__h">Twenty million answers. Nobody noticed.</h2>
+        <p class="beat__k">A live experiment on real traffic, at the scale of a shipping product.</p>
+      </div>
+    </div>
+    <p>The obvious worry is that rigging the choice damages the writing.</p>
+    <p>The paper's answer is that the tournament never introduces a word the model would not have picked. All eight entrants came from its own distribution, so rigging which of them wins does not smuggle anything foreign onto the page.</p>
+    <p>Then they tested it in the open, which is the part that makes this a production paper rather than a proposal. A random slice of real Gemini traffic, then called Bard, was quietly served by the watermarked model. Roughly twenty million responses in, they compared the thumbs-up and thumbs-down that real people had left on both.</p>
+
+    <div class="band">
+      <div class="band__inner">
+        <div class="band__stat"><span class="band__v">20,000,000</span><span class="band__l">real Gemini responses served by the watermarked model</span></div>
+        <div class="band__pair">
+          <div><span class="band__d">+0.01%</span><span class="band__l">difference in thumbs-up rate, watermarked higher</span></div>
+          <div><span class="band__d">&minus;0.02%</span><span class="band__l">difference in thumbs-down rate, watermarked lower</span></div>
+          <p class="band__note">Both differences fall well inside the 95% confidence interval.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <p>They ran a controlled version too: 3,000 questions, watermarked and unwatermarked answers side by side, human raters scoring grammar and coherence, relevance, correctness, helpfulness and overall quality. No significant preference either way, on any of the five.</p>
+  </section>
+
+  <section class="chapter chapter--beat" id="s07">
+    <div class="beat">
+    <div class="beat__media" aria-hidden="true"><img src="assets/img/detection@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="beat__body">
+      <span class="beat__n">07</span>
+      <h2 class="beat__h">Detection is arithmetic.</h2>
+      <p class="beat__k">The text and the key. Never the model.</p>
+    </div>
+  </div>
+    <p>To check a piece of text you need two things: the text, and the key. You do not need the model. You do not need to run anything expensive. You do not need to ask Google.</p>
+    <p>Walk the text word by word. At each word, take the four words before it, mix in the key, get the seed, and look up which coin that word was handed. Write down the zero or the one. Do that for every word and every set of dice, then take the average.</p>
+    <p>Text nobody watermarked averages about 0.5, because nobody was steering the coins. Watermarked text averages higher, because every word on the page won its way there by winning coin flips. Then you draw a line and say: above this, watermarked.</p>
+
+    <figure class="fig fig--wide" id="scorer" data-tournament="score">
+      <div class="scorer">
+        <div class="scorer__tabs" role="tablist" aria-label="Sample text">
+          <button role="tab" class="scorer__tab is-on" data-sample="wm" aria-selected="true" id="tabWm" aria-controls="scorerText">Watermarked</button>
+          <button role="tab" class="scorer__tab" data-sample="human" aria-selected="false" id="tabHu" aria-controls="scorerText">Human written</button>
+          <button role="tab" class="scorer__tab" data-sample="para" aria-selected="false" id="tabPa" aria-controls="scorerText">Watermarked, then paraphrased</button>
+        </div>
+        <div class="scorer__text" id="scorerText" role="tabpanel" aria-labelledby="tabWm"></div>
+        <div class="scorer__readout">
+          <div class="meter" id="scorerMeter">
+            <div class="meter__scale" aria-hidden="true"><span>0.45</span><span>0.55</span><span>0.65</span><span>0.75</span></div>
+            <div class="meter__track">
+              <div class="meter__fill" id="scorerFill"></div>
+              <div class="meter__threshold" id="scorerThreshold"><span class="meter__thresholdLabel">threshold</span></div>
+            </div>
+          </div>
+          <div class="scorer__verdictRow">
+            <output class="scorer__score" id="scorerScore" for="scorerText">0.500</output>
+            <span class="scorer__verdict" id="scorerVerdict" role="status">Not watermarked</span>
+          </div>
+          <label class="scorer__slider">
+            <span>Move the line</span>
+            <input type="range" id="scorerRange" min="500" max="700" value="575" step="1" aria-describedby="scorerTradeoff">
+          </label>
+          <p class="scorer__tradeoff" id="scorerTradeoff">Lower the line and you catch more watermarked text, but you start accusing innocent writing. Raise it and the reverse.</p>
+        </div>
+      </div>
+      <figcaption>Every g-value here is computed live in your browser with a real seeded hash. There is no model behind it, so the sample texts are fixed. The paper writes this as Score(x), the mean g-value across every position and every layer.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s08">
+    <div class="beat beat--right">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/entropy@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">08</span>
+        <h2 class="beat__h">A watermark needs room to hide.</h2>
+        <p class="beat__k">Length and freedom decide whether the mark can be read at all.</p>
+      </div>
+    </div>
+    <p><b>Length.</b> Every word adds one more small piece of evidence, and none of them is worth much alone. Forty words is close to a coin flip. Four hundred words is close to certain.</p>
+    <p><b>Freedom.</b> This one is the real limit. Ask <em>what is the capital of France</em> and there is one answer. The model's list has a single word on it with any weight at all. The tournament has nothing to choose between, so there is nothing to encode, and no watermark survives.</p>
+    <p>Ask for a story, an explanation, an argument, and the list is wide open. Hundreds of reasonable next words, and every choice among them is somewhere to leave a mark. The paper's word for this is entropy.</p>
+
+    <figure class="fig fig--wide">
+      <div data-chart="detectability"></div>
+      <figcaption>Detection rate against text length, at a false positive rate held at 1%. Gemma 7B-IT at temperature 0.7, prompted from the ELI5 dataset. Redrawn from Figure 3a.</figcaption>
+    </figure>
+
+    <figure class="fig fig--full">
+      <div data-chart="entropy"></div>
+      <figcaption>The same measurement at three temperatures. At 1.0 the model is already choosing freely and both schemes do well; at 0.5 it is nearly decided before the tournament starts, and that is where the gap opens. Redrawn from Extended Data Figure 1.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s09">
+    <div class="beat">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/production@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">09</span>
+        <h2 class="beat__h">It had to be free, or it would never run.</h2>
+        <p class="beat__k">Thirty rounds deep, and it costs 0.088 milliseconds a word.</p>
+      </div>
+    </div>
+    <p>A watermark that slows the model down does not get deployed, whatever its merits. Much of this paper is really an engineering paper about that.</p>
+    <p>In production the tournament runs thirty rounds deep, not three. More rounds means more coin flips per word, which means more evidence and a steadier score. The benefit tails off with depth, so thirty is a chosen stopping point rather than a limit.</p>
+    <p>They also fitted it to speculative sampling, the trick where a small fast model guesses several words ahead and the big model checks its work. That combination is how large systems actually run, and nobody had made watermarking work with it before. SynthID-Text runs in Gemini and Gemini Advanced today, and the code is public.</p>
+
+    <figure class="fig fig--wide">
+      <div data-chart="latency"></div>
+      <figcaption>Gemma 7B-IT served on four v5e tensor processing units. The bars are drawn at true scale, which is the point: at 30 tournament rounds the cost is 0.088 milliseconds per token.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter chapter--beat" id="s10">
+    <div class="beat beat--right">
+    <div class="beat__media" aria-hidden="true"><img src="assets/img/breaks@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="beat__body">
+      <span class="beat__n">10</span>
+      <h2 class="beat__h">This is not a solved problem.</h2>
+      <p class="beat__k">Paraphrase it and the signature is gone.</p>
+    </div>
+  </div>
+    <p>The paper is unusually direct about its own limits, and any honest reading has to carry them. They decide what the method is actually for.</p>
+    <ol class="limits">
+      <li><h3>Paraphrasing removes it</h3><p>Run watermarked text through another model and ask for a rewrite, and the mark mostly goes. Heavy editing by hand does the same. Light edits survive, because the score is an average and a few changed words barely move it.</p></li>
+      <li><h3>It only works if the writer cooperates</h3><p>The watermark has to be applied at the moment of generation, by whoever is running the model. Anyone running an open-weight model on their own hardware simply does not switch it on. The paper names this directly as a problem that gets harder as open models spread.</p></li>
+      <li><h3>It can be attacked</h3><p>Stealing, spoofing and scrubbing are live research problems. Someone able to probe the system enough might learn the pattern well enough to strip it out, or worse, to stamp it onto text a human actually wrote.</p></li>
+      <li><h3>Short text carries nothing</h3><p>A sentence has almost no evidence in it. A tweet is out of reach. So is a headline, a caption, or a factual answer with only one sensible phrasing.</p></li>
+      <li><h3>It is not an AI detector</h3><p>It answers <em>did this particular system write this</em>. It does not answer <em>was this written by AI</em>. Those are different questions, and the second one still has no good answer.</p></li>
+    </ol>
+    <p>The authors' own framing: generative watermarking is complementary to the other approaches rather than a replacement for them, and no text detection method is foolproof. What they have shown is that one of these methods can run at the scale of a real product without making it worse.</p>
+  </section>
+
+  <section class="chapter chapter--beat" id="s11">
+    <div class="beat">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/bench@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <span class="beat__n">11</span>
+        <h2 class="beat__h">Your sentence. Your discards.</h2>
+        <p class="beat__k">Your key, your sentence, and everything the tournament threw away.</p>
+      </div>
+    </div>
+    <p>Pick a key, pick an opening, and run it. The page runs a real seeded hash over your words, assigns real coin flips, plays a full tournament at every position and scores the result the way the paper does.</p>
+
+    <figure class="fig fig--wide" id="bench" data-tournament="sandbox">
+      <div class="tool tool--wide">
+        <div class="tool__grid">
+          <label class="field"><span class="field__l">Opening</span>
+            <span class="field__wrap"><select class="tool__input tool__input--select" id="benchSeedText">
+              <option value="0">my favourite tropical fruit is</option>
+              <option value="1">the strangest thing about the sea is</option>
+              <option value="2">nobody in the village would say</option>
+            </select><svg class="field__caret" viewBox="0 0 14 8" aria-hidden="true" focusable="false"><path d="M1 1 L7 7 L13 1"/></svg></span>
+          </label>
+          <label class="field"><span class="field__l">Watermarking key</span>
+            <input class="tool__input" id="benchKey" type="text" value="deepmind-2024" autocomplete="off" spellcheck="false">
+          </label>
+          <label class="field"><span class="field__l">Tournament rounds <output id="benchLayersOut">6</output></span>
+            <input class="tool__input" id="benchLayers" type="range" min="1" max="6" value="6" step="1">
+          </label>
+          <div class="field__buttons">
+            <button class="btn btn--primary" id="benchRun" type="button">Run it</button>
+            <button class="btn" id="benchOff" type="button" aria-pressed="false">Watermark off</button>
+          </div>
+        </div>
+      </div>
+      <div class="benchout">
+        <div class="bench__strip" id="benchStrip" aria-live="polite"></div>
+        <div class="bin" id="benchBin"><span class="bin__label">Thrown out</span><div class="bin__pins" id="benchPins"></div></div>
+        <div class="bench__readout">
+          <div class="bench__scoreBlock">
+            <span class="bench__scoreL">Score</span>
+            <output class="bench__score" id="benchScore" for="benchStrip">0.500</output>
+            <span class="bench__verdict" id="benchVerdict">Nothing run yet</span>
+          </div>
+          <p class="bench__hint" id="benchHint">Turn the watermark off and run it again with the same key. The words stay plausible, the score falls back to chance.</p>
+        </div>
+      </div>
+      <figcaption>There is no language model here. The candidate words at each position are written by hand, so read this as the mechanism made visible rather than a working watermarker. Every piece of arithmetic in it is real.</figcaption>
+    </figure>
+  </section>
+
+</article>
+
+<footer class="end">
+  <h2>The paper</h2>
+  <p class="end__cite">Dathathri, S., See, A., Ghaisas, S., Huang, P.-S., McAdam, R., Welbl, J., Bachani, V., Kaskasoli, A., Stanforth, R., Matejovicova, T., Hayes, J., Vyas, N., Merey, M. A., Brown-Cohen, J., Bunel, R., Balle, B., Cemgil, T., Ahmed, Z., Stacpoole, K., Shumailov, I., Baetu, C., Gowal, S., Hassabis, D. &amp; Kohli, P. <cite>Scalable watermarking for identifying large language model outputs.</cite> <em>Nature</em> <b>634</b>, 818-823 (2024).</p>
+  <p class="end__links">
+    <a href="https://doi.org/10.1038/s41586-024-08025-4">doi.org/10.1038/s41586-024-08025-4</a>
+    <a href="https://github.com/google-deepmind/synthid-text">Source code</a>
+    <a href="https://creativecommons.org/licenses/by/4.0/">Article licensed CC BY 4.0</a>
+  </p>
+  <p class="end__note"><b>This site is a reading of that paper.</b> It is not published by Google DeepMind, by Nature, or by any of the authors, and it is not endorsed by them. Every number quoted here comes from the article; every simplification, analogy and mistake is this site's own. Nothing you type on this page leaves your browser.</p>
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
