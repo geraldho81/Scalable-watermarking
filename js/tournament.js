@@ -8,8 +8,10 @@
 
 const H = 4;          // sliding context window; the paper's experiments use 4
 const LAYERS = 30;    // production depth in the paper
-const M = 6;          // knockout depth. 2^6 = 64 entrants drawn with replacement,
-                      // which is what Algorithm 2 does: N^m possibly non-unique samples
+const M = 3;          // knockout depth. 2^3 = 8 entrants, matching the number of
+                      // distinct candidates per position. Going deeper than the field
+                      // is wide means no word can win every layer, ties decide the
+                      // result, and the signal flattens instead of strengthening.
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function hash32(str) {
@@ -132,6 +134,39 @@ const SEA_CHAIN = [
   F('of'), F('it'), F('is'), F('a'),
   ['temporary', 'provisional', 'borrowed', 'passing', 'hopeful', 'private', 'stubborn', 'brief'],
   ['opinion', 'arrangement', 'guess', 'argument', 'promise', 'sketch', 'habit', 'claim'],
+  F('.'),
+  F('Every'), ['chart', 'map', 'survey', 'sounding', 'reading', 'drawing', 'estimate', 'account'],
+  F('that'), ['survived', 'lasted', 'circulated', 'sold', 'mattered', 'travelled', 'endured', 'held'],
+  F('was'), ['copied', 'redrawn', 'corrected', 'reprinted', 'traced', 'amended', 'reissued', 'defended'],
+  F('by'), F('someone'), F('who'), F('had'), F('never'),
+  ['seen', 'crossed', 'entered', 'measured', 'reached', 'trusted', 'feared', 'left'],
+  F('the'), ['water', 'channel', 'strait', 'bay', 'crossing', 'passage', 'sound', 'shallows'],
+  F('.'),
+  F('The'), ['old', 'best', 'quiet', 'careful', 'stubborn', 'senior', 'local', 'surviving'],
+  ['pilots', 'skippers', 'navigators', 'boatmen', 'ferrymen', 'masters', 'crews', 'hands'],
+  ['trusted', 'preferred', 'believed', 'followed', 'kept', 'defended', 'used', 'chose'],
+  F('their'), ['hands', 'ears', 'memory', 'instinct', 'eyes', 'habits', 'training', 'nerve'],
+  F('over'), F('any'),
+  ['instrument', 'chart', 'table', 'almanac', 'compass', 'device', 'reading', 'forecast'],
+  F('they'), F('were'), F('given'), F('.'),
+  ['Storms', 'Squalls', 'Gales', 'Fogs', 'Currents', 'Tides', 'Swells', 'Winds'],
+  ['arrive', 'appear', 'gather', 'come', 'build', 'form', 'rise', 'begin'],
+  F('without'), ['permission', 'notice', 'warning', 'apology', 'reason', 'ceremony', 'pattern', 'schedule'],
+  F('and'), F('leave'), F('without'),
+  ['comment', 'explanation', 'apology', 'trace', 'record', 'witness', 'ceremony', 'account'],
+  F('.'),
+  F('What'), F('the'), F('sea'),
+  ['returns', 'gives back', 'surrenders', 'releases', 'yields', 'washes up', 'hands back', 'spits out'],
+  F('it'), F('returns'),
+  ['broken', 'late', 'altered', 'lighter', 'stripped', 'unrecognisable', 'incomplete', 'changed'],
+  F('and'), ['late', 'quietly', 'elsewhere', 'colder', 'smaller', 'without ceremony', 'in pieces', 'much later'],
+  F('.'),
+  F('Nobody'), F('has'), F('ever'),
+  ['owned', 'held', 'kept', 'fixed', 'mapped', 'tamed', 'claimed', 'defended'],
+  F('a'), ['shoreline', 'beach', 'harbour wall', 'sandbar', 'estuary', 'jetty', 'headland', 'quay'],
+  F('for'), ['longer', 'more seasons', 'more years', 'any longer', 'much longer', 'a moment longer', 'further', 'better'],
+  F('than'), F('the'), F('sea'),
+  ['allowed', 'permitted', 'tolerated', 'chose', 'intended', 'conceded', 'agreed', 'wanted'],
   F('.')
 ];
 
@@ -307,25 +342,30 @@ export function initScorer() {
   const verdict = document.getElementById('scorerVerdict');
   const range = document.getElementById('scorerRange');
   const tabs = Array.prototype.slice.call(root.querySelectorAll('.scorer__tab'));
-  const KEY = 'deepmind-2024';
+  const KEY = 'synthid';
 
-  const wm = generate(SEA_CHAIN, KEY, 3, true);
+  const wmGen = generate(SEA_CHAIN, KEY, M, true);
+  const wmWords = wmGen.map(function (t) { return t.w; });
+  const wmPer = scoreTokens(wmWords, KEY, M).per;
+  const wm = wmWords.map(function (w, i) {
+    return { w: w, evidence: wmPer[i], choice: SEA_CHAIN[i].length > 1 };
+  });
 
   const humanWords = SEA_CHAIN.map(function (slot) { return slot[0]; });
-  const humanPer = scoreTokens(humanWords, KEY).per;
+  const humanPer = scoreTokens(humanWords, KEY, M).per;
   const human = humanWords.map(function (w, i) {
     return { w: w, evidence: humanPer[i], choice: SEA_CHAIN[i].length > 1 };
   });
 
   const paraWords = SEA_CHAIN.map(function (slot, i) {
-    const w = wm[i].w;
+    const w = wmWords[i];
     if (slot.length > 1 && i % 3 !== 2) {
       const alt = slot.filter(function (s) { return s !== w; })[0];
       return alt || w;
     }
     return w;
   });
-  const paraPer = scoreTokens(paraWords, KEY).per;
+  const paraPer = scoreTokens(paraWords, KEY, M).per;
   const para = paraWords.map(function (w, i) {
     return { w: w, evidence: paraPer[i], choice: SEA_CHAIN[i].length > 1 };
   });
@@ -511,4 +551,88 @@ export function initDice() {
   }
   input.addEventListener('input', paint);
   paint();
+}
+
+/* ============================================================
+   12 : the paraphrase dial
+   Replacing a word does two things. It throws away a token that
+   won its tournament, and it re-seeds the next H positions, so
+   their coins get re-rolled too. That second effect is the one
+   people miss, and it is why a rewrite collapses the score while
+   light editing does not.
+   ============================================================ */
+export function initRewrite() {
+  const root = document.getElementById('rewrite');
+  if (!root) return;
+  const range = document.getElementById('rwRange');
+  const textEl = document.getElementById('rwText');
+  const scoreEl = document.getElementById('rwScore');
+  const verdict = document.getElementById('rwVerdict');
+  const fill = document.getElementById('rwFill');
+  const swapped = document.getElementById('rwSwapped');
+  const cascade = document.getElementById('rwCascade');
+  const pct = document.getElementById('rwPct');
+  const KEY = 'synthid';
+
+  const baseGen = generate(SEA_CHAIN, KEY, M, true);
+  const baseWords = baseGen.map(function (t) { return t.w; });
+  const basePer = scoreTokens(baseWords, KEY, M).per;
+  const base = baseWords.map(function (w, i) { return { w: w, evidence: basePer[i] }; });
+  const choiceIdx = [];
+  SEA_CHAIN.forEach(function (slot, i) { if (slot.length > 1) choiceIdx.push(i); });
+
+  function build(fraction) {
+    // spread the replacements evenly instead of taking a run from the front
+    const take = Math.round(choiceIdx.length * fraction);
+    const chosen = new Set();
+    if (take > 0) {
+      const stride = choiceIdx.length / take;
+      for (let k = 0; k < take; k++) chosen.add(choiceIdx[Math.floor(k * stride)]);
+    }
+    const words = SEA_CHAIN.map(function (slot, i) {
+      if (!chosen.has(i)) return base[i].w;
+      const alt = slot.filter(function (x) { return x !== base[i].w; });
+      return alt.length ? alt[0] : base[i].w;
+    });
+    const per = scoreTokens(words, KEY, M).per;
+    let reRolled = 0;
+    for (let i = 0; i < words.length; i++) {
+      if (!chosen.has(i) && Math.abs(per[i] - base[i].evidence) > 1e-9) reRolled++;
+    }
+    const score = per.reduce(function (a, b) { return a + b; }, 0) / per.length;
+    return { words: words, per: per, chosen: chosen, score: score, swapped: chosen.size, reRolled: reRolled };
+  }
+
+  function render() {
+    const f = Number(range.value) / 100;
+    const r = build(f);
+
+    textEl.innerHTML = '';
+    r.words.forEach(function (w, i) {
+      const el = document.createElement('span');
+      const changed = r.chosen.has(i);
+      const rolled = !changed && Math.abs(r.per[i] - base[i].evidence) > 1e-9;
+      el.className = 'rwtok' + (changed ? ' is-swapped' : rolled ? ' is-rolled' : '');
+      el.dataset.band = String(band(r.per[i]));
+      el.textContent = w;
+      textEl.appendChild(el);
+      if (i < r.words.length - 1 && !joinable(r.words[i + 1])) {
+        textEl.appendChild(document.createTextNode(' '));
+      }
+    });
+
+    const lo = 0.45, hi = 0.72;
+    const p = Math.max(0, Math.min(100, ((r.score - lo) / (hi - lo)) * 100));
+    fill.style.transform = 'scaleX(' + (p / 100) + ')';
+    scoreEl.textContent = r.score.toFixed(3);
+    const marked = r.score >= 0.575;
+    verdict.textContent = marked ? 'Still reads as watermarked' : 'No longer reads as watermarked';
+    verdict.classList.toggle('is-wm', marked);
+    pct.textContent = Math.round(f * 100) + '%';
+    swapped.textContent = r.swapped;
+    cascade.textContent = r.reRolled;
+  }
+
+  range.addEventListener('input', render);
+  render();
 }

@@ -105,7 +105,7 @@
       </div>
     </div>
     <p>Here is the whole trick.</p>
-    <p>The watermark is not added to the finished sentence. Nothing is swapped for a synonym. No invisible characters are stitched between the words. Anything done to text after it is written leaves scars, and a careful reader or a determined attacker finds them.</p>
+    <p>The watermark is not added to the finished sentence at all, so nothing is swapped for a synonym and no invisible characters are stitched between the words. Anything done to text after it is written leaves scars, and a careful reader or a determined attacker finds them.</p>
     <p>Instead, the watermark changes <em>how each word gets picked</em>. The model still draws from its own list. It just runs a contest first, rigged by a secret only the model's owner holds.</p>
     <p>The text that comes out is text the model would have written anyway. Only across a few hundred words do its choices start leaning in a direction that looks like nothing at all, unless you know what to check.</p>
 
@@ -259,7 +259,7 @@
           <p class="scorer__tradeoff" id="scorerTradeoff">Lower the line and you catch more watermarked text, but you start accusing innocent writing. Raise it and the reverse.</p>
         </div>
       </div>
-      <figcaption>Every g-value here is computed live in your browser with a real seeded hash. There is no model behind it, so the sample texts are fixed. The paper writes this as Score(x), the mean g-value across every position and every layer.</figcaption>
+      <figcaption>Every g-value here is computed live in your browser with a real seeded hash. There is no model behind it, so the sample texts are fixed, and the watermarking key is fixed too. Worth knowing: at this length the score is noisy, and some keys separate these three samples far better than others. That is the paper's point about short text, visible in the demo built to show it. The paper writes this as Score(x), the mean g-value across every position and every layer.</figcaption>
     </figure>
   </section>
 
@@ -350,8 +350,8 @@
           <label class="field"><span class="field__l">Watermarking key</span>
             <input class="tool__input" id="benchKey" type="text" value="deepmind-2024" autocomplete="off" spellcheck="false">
           </label>
-          <label class="field"><span class="field__l">Tournament rounds <output id="benchLayersOut">6</output></span>
-            <input class="tool__input" id="benchLayers" type="range" min="1" max="6" value="6" step="1">
+          <label class="field"><span class="field__l">Tournament rounds <output id="benchLayersOut">3</output></span>
+            <input class="tool__input" id="benchLayers" type="range" min="1" max="3" value="3" step="1">
           </label>
           <div class="field__buttons">
             <button class="btn btn--primary" id="benchRun" type="button">Run it</button>
@@ -387,7 +387,7 @@
 
     <p class="byline-own">Everything above this line is a reading of somebody else's research. This last part is mine.</p>
 
-    <p>In section 07 you moved a real score. Watermarked text sat at <b>0.607</b>. Paraphrased, the same text fell to <b>0.521</b>, close enough to chance that no usable threshold would flag it. You ran that arithmetic yourself, a few thousand words ago.</p>
+    <p>In section 07 you moved a real score. Watermarked text sat at <b>0.618</b>. Paraphrased, the same text fell to <b>0.493</b>, close enough to chance that no usable threshold would flag it. You ran that arithmetic yourself, a few thousand words ago.</p>
     <p>It works because of the mechanism this whole page has been about. The mark is a record of which words got chosen, held in the choices themselves, not stitched into the sentence. Replace the words and there is no record. So the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
     <p>Before any of that, there is a much dumber problem sitting in your text right now.</p>
 
@@ -456,16 +456,85 @@
       <div class="beat__media" aria-hidden="true"><img src="assets/img/diffuse@2x.jpg" alt="" loading="lazy" decoding="async"></div>
       <div class="beat__body">
         <h3 class="beat__h">Then the part nothing local can touch.</h3>
-        <p class="beat__k">No hidden character. No metadata. Nothing sitting in the file at all.</p>
+        <p class="beat__k">There is no hidden character to find and no metadata to strip, because nothing was added to the file.</p>
       </div>
     </div>
 
     <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that claims it detected and removed one is lying to you.</p>
     <p>Moving that signal means replacing the words, at the token level, across the whole piece. And there is a trap: a rewrite by a model that watermarks its own output just swaps one company's mark for another's.</p>
 
-    <h3 class="sub">Which is what I built Slopstopper for</h3>
-    <p>It does both layers and keeps them separate, because they are different jobs. Layer A strips every character in the table above. Layer B is opt-in and is a real rewrite: token-level paraphrase, changed clause order, changed sentence boundaries, run through a model chosen because it does not mark its own output.</p>
-    <p>On the way through it removes what makes writing read as machine-written to a human rather than to a detector. The "it's not X, it's Y" tic, em dashes, throat-clearing openers, fake-profound closers, the rule of three. Your facts, numbers and voice stay.</p>
+    <div class="beat beat--right beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/cascade@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">Why replacing one word breaks five.</h3>
+        <p class="beat__k">A coin does not belong to a word. It belongs to a word and the four in front of it.</p>
+      </div>
+    </div>
+
+    <p>This is the part that makes a rewrite work, and it follows from machinery you have already seen. A word's coin depends on the word and on the four words before it, so replacing one word breaks two things at once. You throw away a token that won its tournament and put in one that won nothing, which drags that position back to chance. You also change the context for the next four positions, so their coins get re-rolled whether or not you touched them.</p>
+    <p>One replacement damages up to five positions. That is the whole reason light editing survives and a paraphrase does not. The score is an average, so a few changed words barely move it, but a rewrite that touches most of the sentence drags the context along with it.</p>
+
+    <figure class="fig fig--full" id="rewrite">
+      <div class="dial">
+        <div class="dial__head">
+          <label class="dial__label" for="rwRange">Replace <output id="rwPct">0%</output> of the passage</label>
+          <input class="dial__range" id="rwRange" type="range" min="0" max="100" value="0" step="4">
+        </div>
+        <div class="dial__text" id="rwText"></div>
+        <div class="dial__panel">
+          <div class="dial__meter">
+            <div class="meter__track"><div class="meter__fill" id="rwFill"></div></div>
+          </div>
+          <div class="dial__stats">
+            <div class="dial__stat"><output class="dial__v" id="rwScore">0.000</output><span class="dial__l">score</span></div>
+            <div class="dial__stat"><output class="dial__v" id="rwSwapped">0</output><span class="dial__l">words swapped</span></div>
+            <div class="dial__stat"><output class="dial__v" id="rwCascade">0</output><span class="dial__l">untouched words whose coins re-rolled</span></div>
+            <span class="dial__verdict" id="rwVerdict">Still reads as watermarked</span>
+          </div>
+        </div>
+      </div>
+      <figcaption>Blue words were swapped. Grey words were left exactly as they were, and their coins changed anyway, because the context in front of them moved. That third number is the cascade, and it is why a paraphrase collapses a score that survives light editing.</figcaption>
+    </figure>
+
+    <div class="beat beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/rewriter@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">You cannot use Claude to strip Claude.</h3>
+        <p class="beat__k">Lifting one company's mark off and pressing another one on is not a clean sheet.</p>
+      </div>
+    </div>
+
+    <p>There is a trap in doing the rewrite, and it got sharper this year. Whatever performs the rewrite has to satisfy two conditions and only two: it must not be the model that wrote the text, and it must not watermark its own output.</p>
+    <p>Since August 2026 Claude fails the second condition on everything it writes, with no opt-out on any tier, so cleaning Claude with Claude just swaps one mark for another. Open weights running locally are the strongest answer, because you control the sampling and no key-based mark can be applied at all. A hosted model works too when that vendor does not mark its text, which for now includes Grok. That list moves under EU AI Act Article 50, so the tool checks the current position rather than trusting a name.</p>
+
+    <div class="beat beat--right beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/pipeline@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">What Slopstopper actually runs.</h3>
+        <p class="beat__k">Five passes in a fixed order, and the order is the point.</p>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li><h4>Layer A, first</h4><p>Strip every marker character in the table above, so the rewrite starts from clean text instead of carrying junk through it.</p></li>
+      <li><h4>The paraphrase pass</h4><p>A token-level rewrite: changed clause order, changed connectors, changed sentence boundaries. Facts, numbers, names and technical identifiers are held fixed.</p></li>
+      <li><h4>A stronger pass, only if needed</h4><p>When the paraphrase comes out thin, it goes further: humanise, back-translate through another language, or rebuild the whole piece from an extracted outline.</p></li>
+      <li><h4>Layer A again</h4><p>A rewrite introduces its own curly quotes, dashes and stray invisible characters. The second sweep catches what the first could not have known about.</p></li>
+      <li><h4>An honest report</h4><p>What changed, what was left, and what risk remains, with no score attached and no claim of a clean bill.</p></li>
+    </ol>
+
+    <p>On the way through it also removes what makes writing read as machine-written to a human rather than to a detector. The "it's not X, it's Y" tic, em dashes, throat-clearing openers, fake-profound closers, the rule of three. Your facts, numbers and voice stay.</p>
+
+    <div class="beat beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/needle@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">What it will not do.</h3>
+        <p class="beat__k">The needle gets close to chance. It does not get to zero, and nothing does.</p>
+      </div>
+    </div>
+
+    <p>A rewrite reduces the statistical signal. It does not guarantee its removal, and no local tool can measure how much is left, because measuring it needs the key. Short text carries almost no signal either way. Long, high-entropy text carries more, and more of it survives.</p>
+    <p>Anything that tells you your text is now undetectable is selling you something, and this one says so in its own documentation.</p>
   </section>
 
 </article>

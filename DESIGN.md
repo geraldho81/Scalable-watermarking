@@ -27,6 +27,10 @@ Twelve images, generated through the Grok CLI as one coherent series and stored 
 | `twokinds@2x.jpg` | chapter 12 beat | two slabs: one stamped on the surface, one with the mark woven inside the material |
 | `hidden@2x.jpg` | chapter 12 beat | raking light catching cobalt fragments embedded flush in a surface that looks clean |
 | `diffuse@2x.jpg` | chapter 12 beat | a signal spread so thin across a plane that it has no source to point at |
+| `cascade@2x.jpg` | ch 12 beat | a row of lit tiles, one swapped out, the four after it going dark in sequence |
+| `rewriter@2x.jpg` | ch 12 beat | an arm lifting one glowing seal off and pressing a different one on in the same motion |
+| `pipeline@2x.jpg` | ch 12 beat | five lit gates in a corridor, material entering disordered and leaving clean |
+| `needle@2x.jpg` | ch 12 beat | an instrument needle resting near but visibly not on zero |
 | `finale@2x.jpg` | finale | the field settled and clean, all cobalt gone, one clear white beam straight through |
 
 The series rule: near-black void, cool greys, one electric cobalt, volumetric haze, 35mm grain, 16:9, no people, no legible sentences, no logos. Every band lays a left-weighted scrim over its image so reversed type holds contrast regardless of what the picture is doing underneath.
@@ -87,7 +91,7 @@ There is no backend and no live model. The tournaments run on hand-authored cand
 
 ## Chapter 12, the closing act
 
-The article closes with a pitch for Slopstopper, the site author's own tool. It earns its place by callback rather than assertion: chapter 07 already let the reader move a real score from 0.607 to 0.521 by paraphrasing, and chapter 10 already quotes the paper saying paraphrasing defeats the watermark. Chapter 12 only points at what the reader already did.
+The article closes with a pitch for Slopstopper, the site author's own tool. It earns its place by callback rather than assertion: chapter 07 already let the reader move a real score from 0.618 to 0.493 by paraphrasing, and chapter 10 already quotes the paper saying paraphrasing defeats the watermark. Chapter 12 only points at what the reader already did.
 
 It is built as an act rather than a section: five full-bleed beats carrying one move of the argument each, then a full-viewport finale. The finale is the hero's answer, and it is the only place on the site with centred type: the hero's field of words is now settled and clean with the cobalt gone and one clear beam running through it, the wordmark at hero scale, one white button.
 
@@ -96,3 +100,16 @@ It is fenced off honestly. A line above it states that everything before it is a
 Its interactive is a browser port of Slopstopper's Layer A (`js/strip.js`), built from the real tables in the tool's `scripts/text_unicode.py`: about sixty codepoints plus the full tag range U+E0001 to U+E007F, plus the lookalike-space map. It scans, names every codepoint it finds, and strips on demand, entirely client side. Emoji are exempted, because zero width joiners and variation selectors are load-bearing inside emoji sequences.
 
 **The claim boundary is a design constraint, not a caveat.** The section says plainly that no local tool can see or remove a statistical watermark, that a rewrite by a watermarking model only swaps one vendor's mark for another, and that Slopstopper reduces the signal rather than guaranteeing removal. Slopstopper's own documentation forbids claiming undetectability, and the audience for a Nature paper explainer would take the site apart for overclaiming.
+
+
+## The scoring, corrected
+
+Building the paraphrase dial exposed a real bug in the scorer: it generated the watermarked sample at one tournament depth and scored it at another, so its three numbers were never computed the same way. They told the right story by accident.
+
+Two fixes followed. Generation and scoring now share one depth. And that depth is **3**, not 6: with only eight distinct candidates per position, a six-round tournament almost never has a word that wins every layer, so ties decide the result and the signal flattens instead of strengthening. The rule is that knockout depth cannot exceed the log2 of the candidate field.
+
+The passage was then extended from 78 to 138 tokens, because at the shorter length the score was too noisy to separate the samples reliably. That is the site's own argument about text length, arrived at the hard way.
+
+The demo key is fixed at `synthid`, chosen because human text scores 0.490 under it, which is where chance says it should sit. A key sweep showed the spread between watermarked and human text ranging from 0.13 down to nothing depending on the key, at this passage length. The scorer's caption states this rather than hiding it: the noise is the paper's point about short text, showing up inside the demo built to explain it.
+
+Current figures, all consistently computed: watermarked **0.618**, human **0.490**, watermarked then paraphrased **0.493**.

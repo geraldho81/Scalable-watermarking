@@ -720,3 +720,51 @@ code {
   font-size: 0.8125rem; line-height: 1.62; color: rgba(255,255,255,0.42);
 }
 .end { border-top: 0; margin-top: 0; }
+
+/* the five-step pipeline */
+.steps { list-style: none; counter-reset: st; margin: 1.8em 0; padding: 0; }
+.steps li {
+  counter-increment: st; padding: 20px 0; border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: 2.4rem 1fr; gap: 0 0.6rem;
+}
+.steps li::before {
+  content: counter(st); grid-row: 1 / span 2;
+  font-size: 0.9375rem; font-weight: 600; color: var(--blue); line-height: 1.9;
+}
+.steps h4 { margin: 0 0 4px; font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.012em; color: var(--ink); }
+.steps p { margin: 0; color: var(--ink-2); font-size: 1rem; }
+
+/* the paraphrase dial */
+.dial { background: var(--wash); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+.dial__head { padding: clamp(20px, 3vw, 28px) clamp(20px, 3vw, 30px) 0; }
+.dial__label {
+  display: block; margin-bottom: 14px;
+  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3);
+}
+.dial__label output { color: var(--blue); font-weight: 600; }
+.dial__range { width: 100%; accent-color: var(--blue); }
+.dial__text {
+  padding: clamp(22px, 3vw, 32px) clamp(20px, 3vw, 30px);
+  font-size: 1.0625rem; line-height: 2.05;
+}
+.rwtok { padding: 3px 1px; border-radius: 2px; transition: background-color 0.3s var(--ease), color 0.3s var(--ease); }
+.rwtok[data-band="1"] { background: rgba(110,140,255,0.10); }
+.rwtok[data-band="2"] { background: rgba(110,140,255,0.18); }
+.rwtok[data-band="3"] { background: rgba(110,140,255,0.28); }
+.rwtok.is-swapped {
+  background: var(--blue); color: #0A0B0F; font-weight: 500;
+}
+.rwtok.is-rolled { background: rgba(255,255,255,0.09); color: var(--ink-3); box-shadow: inset 0 -2px 0 var(--ink-3); }
+.dial__panel { padding: clamp(20px, 3vw, 30px); border-top: 1px solid var(--rule); display: grid; gap: 20px; }
+.dial__meter .meter__track { height: 22px; }
+.dial__stats { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px clamp(24px, 4vw, 48px); }
+.dial__stat { display: grid; gap: 4px; }
+.dial__v { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1; color: var(--ink); }
+.dial__l { font-size: 0.8125rem; color: var(--ink-3); max-width: 22ch; line-height: 1.4; }
+.dial__verdict {
+  margin-left: auto; align-self: center;
+  font-size: 0.8125rem; font-weight: 500; padding: 7px 13px; border-radius: 100px;
+  background: rgba(255,255,255,0.08); color: var(--ink-2); white-space: nowrap;
+}
+.dial__verdict.is-wm { background: var(--blue); color: #0A0B0F; }
+@media (max-width: 700px) { .dial__verdict { margin-left: 0; } }

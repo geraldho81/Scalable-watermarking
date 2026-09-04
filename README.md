@@ -10,7 +10,7 @@ Three demos run the paper's real arithmetic in the browser, with no backend and 
 
 - **The secret dice.** A seeded hash over the last four words plus a key assigns every word in a sample vocabulary a Bernoulli coin. Change a word and all 64 flip, repeatably.
 - **The tournament.** Eight candidates, three knockout rounds, higher coin wins, ties broken deterministically. The seven losers stay on screen.
-- **Detection.** Recomputes g-values over a passage and scores it as the paper's `Score(x)` does. Watermarked scores 0.607, human 0.517, watermarked-then-paraphrased 0.521.
+- **Detection.** Recomputes g-values over a passage and scores it as the paper's `Score(x)` does. Watermarked scores 0.618, human 0.490, watermarked-then-paraphrased 0.493.
 
 The candidate words at each position are hand written rather than drawn from a live model. Everything else is the paper's arithmetic.
 
