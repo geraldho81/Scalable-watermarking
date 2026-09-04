@@ -25,3 +25,6 @@ assets/img/breaks.jpg
 # superseded: the three.js hero was replaced by a generated image
 js/hero.js
 .vercel
+
+# generated video masters, the loop is served from Cloudinary
+assets/video/

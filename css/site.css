@@ -785,3 +785,13 @@ code {
   .options li, .steps li, .limits li { grid-template-columns: 1fr; }
   .options li::before, .steps li::before, .limits li::before { grid-row: auto; line-height: 1.4; }
 }
+
+/* the hero still stays underneath as the poster and the fallback */
+.hero__still, .hero__video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; object-position: 64% 50%;
+  display: block;
+}
+.hero__video { opacity: 0; transition: opacity 1.1s var(--ease); z-index: 1; }
+.hero__video.is-playing { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .hero__video { display: none; } }

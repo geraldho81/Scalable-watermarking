@@ -118,6 +118,37 @@ function initReveal() {
   targets.forEach(function (t) { io.observe(t); });
 }
 
+/* the still carries the hero; the loop fades in only once it can actually play,
+   and never on reduced motion, a save-data hint, or a metered connection */
+function initHeroVideo() {
+  const v = document.getElementById('heroVideo');
+  if (!v || REDUCED) return;
+  const c = navigator.connection || {};
+  if (c.saveData || /^(slow-)?2g$/.test(c.effectiveType || '')) return;
+
+  let started = false;
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !started) {
+        started = true;
+        v.preload = 'auto';
+        v.load();
+        v.play().then(function () { v.classList.add('is-playing'); }).catch(function () {});
+      } else if (!e.isIntersecting && started) {
+        v.pause();
+      } else if (e.isIntersecting && started && v.paused) {
+        v.play().catch(function () {});
+      }
+    });
+  }, { threshold: 0.05 });
+  io.observe(v);
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) v.pause();
+    else if (started && v.getBoundingClientRect().bottom > 0) v.play().catch(function () {});
+  });
+}
+
 async function boot() {
   const handlers = [initNav(), initParallax()];
   initReveal();
@@ -136,6 +167,7 @@ async function boot() {
 
   initScroll(handlers);
   settleHash();
+  initHeroVideo();
 
   try {
     const mod = await import('./charts.js');

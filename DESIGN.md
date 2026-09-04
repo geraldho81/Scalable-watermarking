@@ -124,3 +124,14 @@ Chapter 12 names what to actually point the rewrite at, because "use a model tha
 3. **A hosted vendor that does not mark.** Grok for now. Least durable, since Article 50 can change any vendor's position.
 
 Verified against Anthropic's own documentation before publishing rather than taken from the skill file.
+
+
+## The hero loop
+
+The hero still is now the poster for a 20 second video loop, served from Cloudinary (`synthid/hero`, cloud `dsg6ukzzt`) at `f_webm` 1.2MB and `f_mp4` 2.6MB under `q_auto:eco,w_1440`. Masters are gitignored; only the transformed URLs are referenced.
+
+It is a Kling image-to-video render seeded from `hero@2x.jpg`, so it starts on exactly the frame the poster shows and the swap is invisible.
+
+**The first attempt was a dead frame.** Asking for a locked-off camera and pinning the source image as both first and last frame produced a clip with a mean frame-to-frame change of 0.35 out of 255, which is no motion at all. The fix was to drop the loop constraint, ask for a real continuous dolly-in with parallax, and then build the seamless loop in ffmpeg by concatenating the clip with its own reverse. That reads as a slow breath in and out, loops perfectly, and measures 12 to 17 out of 255 between frames.
+
+Playback is gated: it never loads on `prefers-reduced-motion`, on `saveData`, or on a 2G `effectiveType`, it only begins when the hero is actually in view, it pauses when scrolled away or when the tab is hidden, and it fades in over the still only once it is genuinely playing. The still alone is a complete hero if none of that succeeds.

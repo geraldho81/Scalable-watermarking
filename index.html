@@ -7,6 +7,7 @@
 <meta name="description" content="A reading of SynthID-Text, the text watermarking scheme published in Nature in October 2024. How Google DeepMind hid a signature inside the way Gemini chooses its words, and how anyone with the key can read it back.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://res.cloudinary.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -44,7 +45,11 @@
 
   <header class="hero" id="top">
     <div class="hero__media" aria-hidden="true">
-      <img src="assets/img/hero@2x.jpg" alt="" fetchpriority="high" decoding="async">
+      <img class="hero__still" src="assets/img/hero@2x.jpg" alt="" fetchpriority="high" decoding="async">
+      <video class="hero__video" id="heroVideo" poster="assets/img/hero@2x.jpg" muted loop playsinline preload="none" disablepictureinpicture>
+        <source src="https://res.cloudinary.com/dsg6ukzzt/video/upload/f_webm,q_auto:eco,w_1440/synthid/hero.webm" type="video/webm">
+        <source src="https://res.cloudinary.com/dsg6ukzzt/video/upload/f_mp4,q_auto:eco,w_1440/synthid/hero.mp4" type="video/mp4">
+      </video>
     </div>
     <div class="hero__body">
       <h1 class="hero__h">Every word an AI writes was chosen out of thousands.</h1>
