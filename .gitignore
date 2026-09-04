@@ -21,3 +21,6 @@ assets/img/detection.jpg
 assets/img/breaks.jpg
 
 .DS_Store
+
+# superseded: the three.js hero was replaced by a generated image
+js/hero.js
