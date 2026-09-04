@@ -1,4 +1,5 @@
 import { initBracket, initScorer, initBench, initDice } from './tournament.js';
+import { initStrip } from './strip.js';
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -124,6 +125,7 @@ async function boot() {
   initDice();
   initScorer();
   initBench();
+  initStrip();
 
   const bracket = initBracket();
   const bracketEl = document.getElementById('bracket');

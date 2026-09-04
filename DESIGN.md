@@ -23,6 +23,7 @@ Twelve images, generated through the Grok CLI as one coherent series and stored 
 | `tournament@2x.jpg` | chapter 05 | eight blocks of metal type in a knockout bracket, the winner glowing |
 | `detection@2x.jpg` | chapter 07 | a beam sweeping a wall of text, revealing a hidden pattern inside it |
 | `breaks@2x.jpg` | chapter 10 | the same field scattering, the blue thread snapped |
+| `rewrite@2x.jpg` | chapter 12 | the field pulled apart and re-formed, the thread breaking with no replacement |
 
 The series rule: near-black void, cool greys, one electric cobalt, volumetric haze, 35mm grain, 16:9, no people, no legible sentences, no logos. Every band lays a left-weighted scrim over its image so reversed type holds contrast regardless of what the picture is doing underneath.
 
@@ -78,3 +79,14 @@ The authored moment: the knockout bracket resolves layer by layer as it scrolls 
 ## Honest constraints stated on the surface
 
 There is no backend and no live model. The tournaments run on hand-authored candidate sets with a real seeded hash in the browser. The site says so in the sandbox caption and in the colophon, and states that it is a reading of the paper rather than the paper.
+
+
+## Chapter 12, the pitch
+
+The article closes with a pitch for Slopstopper, the site author's own tool. It earns its place by callback rather than assertion: chapter 07 already let the reader move a real score from 0.607 to 0.521 by paraphrasing, and chapter 10 already quotes the paper saying paraphrasing defeats the watermark. Chapter 12 only points at what the reader already did.
+
+It is fenced off honestly. A line above it states that everything before it is a reading of someone else's research and this part is the author's own, and the colophon still separates the site from DeepMind and Nature.
+
+Its interactive is a browser port of Slopstopper's Layer A (`js/strip.js`), built from the real tables in the tool's `scripts/text_unicode.py`: about sixty codepoints plus the full tag range U+E0001 to U+E007F, plus the lookalike-space map. It scans, names every codepoint it finds, and strips on demand, entirely client side. Emoji are exempted, because zero width joiners and variation selectors are load-bearing inside emoji sequences.
+
+**The claim boundary is a design constraint, not a caveat.** The section says plainly that no local tool can see or remove a statistical watermark, that a rewrite by a watermarking model only swaps one vendor's mark for another, and that Slopstopper reduces the signal rather than guaranteeing removal. Slopstopper's own documentation forbids claiming undetectability, and the audience for a Nature paper explainer would take the site apart for overclaiming.
