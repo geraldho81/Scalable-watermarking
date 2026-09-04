@@ -90,7 +90,7 @@ function settleHash() {
 
 /* the image inside each dark band drifts against the scroll */
 function initParallax() {
-  const media = Array.prototype.slice.call(document.querySelectorAll('.beat__media'));
+  const media = Array.prototype.slice.call(document.querySelectorAll('.beat__media, .finale__media'));
   if (!media.length || REDUCED) return function () {};
   return function () {
     const vh = window.innerHeight;
@@ -106,7 +106,7 @@ function initParallax() {
 /* one entrance per block, from an already visible default */
 function initReveal() {
   if (REDUCED) return;
-  const targets = document.querySelectorAll('.beat__body, .band__inner, .fig');
+  const targets = document.querySelectorAll('.beat__body, .band__inner, .fig, .finale__body');
   targets.forEach(function (t) { t.classList.add('reveal'); });
   const io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {

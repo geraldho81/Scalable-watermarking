@@ -23,7 +23,11 @@ Twelve images, generated through the Grok CLI as one coherent series and stored 
 | `tournament@2x.jpg` | chapter 05 | eight blocks of metal type in a knockout bracket, the winner glowing |
 | `detection@2x.jpg` | chapter 07 | a beam sweeping a wall of text, revealing a hidden pattern inside it |
 | `breaks@2x.jpg` | chapter 10 | the same field scattering, the blue thread snapped |
-| `rewrite@2x.jpg` | chapter 12 | the field pulled apart and re-formed, the thread breaking with no replacement |
+| `rewrite@2x.jpg` | chapter 12 opener | the field pulled apart and re-formed, the thread breaking with no replacement |
+| `twokinds@2x.jpg` | chapter 12 beat | two slabs: one stamped on the surface, one with the mark woven inside the material |
+| `hidden@2x.jpg` | chapter 12 beat | raking light catching cobalt fragments embedded flush in a surface that looks clean |
+| `diffuse@2x.jpg` | chapter 12 beat | a signal spread so thin across a plane that it has no source to point at |
+| `finale@2x.jpg` | finale | the field settled and clean, all cobalt gone, one clear white beam straight through |
 
 The series rule: near-black void, cool greys, one electric cobalt, volumetric haze, 35mm grain, 16:9, no people, no legible sentences, no logos. Every band lays a left-weighted scrim over its image so reversed type holds contrast regardless of what the picture is doing underneath.
 
@@ -81,9 +85,11 @@ The authored moment: the knockout bracket resolves layer by layer as it scrolls 
 There is no backend and no live model. The tournaments run on hand-authored candidate sets with a real seeded hash in the browser. The site says so in the sandbox caption and in the colophon, and states that it is a reading of the paper rather than the paper.
 
 
-## Chapter 12, the pitch
+## Chapter 12, the closing act
 
 The article closes with a pitch for Slopstopper, the site author's own tool. It earns its place by callback rather than assertion: chapter 07 already let the reader move a real score from 0.607 to 0.521 by paraphrasing, and chapter 10 already quotes the paper saying paraphrasing defeats the watermark. Chapter 12 only points at what the reader already did.
+
+It is built as an act rather than a section: five full-bleed beats carrying one move of the argument each, then a full-viewport finale. The finale is the hero's answer, and it is the only place on the site with centred type: the hero's field of words is now settled and clean with the cobalt gone and one clear beam running through it, the wordmark at hero scale, one white button.
 
 It is fenced off honestly. A line above it states that everything before it is a reading of someone else's research and this part is the author's own, and the colophon still separates the site from DeepMind and Nature.
 

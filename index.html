@@ -389,11 +389,17 @@
 
     <p>In section 07 you moved a real score. Watermarked text sat at <b>0.607</b>. The same text, paraphrased, fell to <b>0.521</b>, close enough to chance that no threshold worth using would flag it. You ran that arithmetic yourself, on this page, a few thousand words ago.</p>
     <p>It works because of the mechanism this whole page has been about. The mark is a record of which words got chosen, held in the choices themselves rather than stitched into the sentence. Replace the words and there is no longer a record. Which means the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
-
     <p>Before any of that, though, there is a much dumber problem sitting in your text right now.</p>
 
-    <h3 class="sub">Two different things are called a watermark</h3>
-    <p>Only one of them is what this paper describes, and people conflate them constantly.</p>
+    <div class="beat beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/twokinds@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">Two things wear the same name.</h3>
+        <p class="beat__k">One is a seal stamped onto the surface. One is woven through the material and cannot be lifted off it.</p>
+      </div>
+    </div>
+
+    <p>People conflate these constantly, and the difference decides what you can actually do about them.</p>
 
     <figure class="fig fig--wide">
       <table class="twokinds">
@@ -414,7 +420,14 @@
       <figcaption>The first kind is trivially detectable and trivially removable, and most people do not know it is there. The second is neither.</figcaption>
     </figure>
 
-    <h3 class="sub">Check your own text for the first kind</h3>
+    <div class="beat beat--right beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/hidden@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">There is junk in your text right now.</h3>
+        <p class="beat__k">Characters you cannot see, that no spellcheck touches, sitting in anything a model wrote for you.</p>
+      </div>
+    </div>
+
     <p>The box below runs the same character tables that Slopstopper's <code>text_unicode.py</code> uses, here in your browser. Nothing is uploaded and nothing is stored. Emoji are left alone, because emoji are built out of joiners on purpose and stripping those breaks them.</p>
 
     <figure class="fig fig--full" id="strip">
@@ -439,26 +452,35 @@
       <figcaption>A port of Slopstopper's Layer A. Sixty-odd codepoints plus the full tag range U+E0001 to U+E007F, which is where hidden payloads usually live.</figcaption>
     </figure>
 
-    <h3 class="sub">What that box cannot do</h3>
-    <p>It cannot see a statistical watermark, and neither can anything else you run locally. There is no hidden character to find, no metadata to strip, nothing sitting in the file. The signal is spread across hundreds of word choices under a key you do not have. Any tool that tells you it detected and removed one is lying to you.</p>
+    <div class="beat beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/diffuse@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">Then the part nothing local can touch.</h3>
+        <p class="beat__k">No hidden character. No metadata. Nothing sitting in the file at all.</p>
+      </div>
+    </div>
+
+    <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that tells you it detected and removed one is lying to you.</p>
     <p>Moving that signal means replacing the words, at the token level, across the whole piece. And there is a trap in doing it: a rewrite performed by a model that watermarks its own output just swaps one company's mark for another's.</p>
 
     <h3 class="sub">Which is what I built Slopstopper for</h3>
     <p>It does both layers and keeps them separate, because they are different jobs. Layer A strips every character in the table above. Layer B is opt-in, and it is a real rewrite: token-level paraphrase, changed clause order, changed sentence boundaries, run through a model chosen because it does not mark its own output.</p>
     <p>On the way through it also removes the things that make writing read as machine-written to a human rather than to a detector: the "it's not X, it's Y" tic, em dashes, throat-clearing openers, fake-profound closers, the rule of three. Your facts, numbers and voice stay.</p>
-    <p class="honest">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it rather than guaranteeing its removal. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
-
-    <div class="cta">
-      <div class="cta__body">
-        <span class="cta__eyebrow">Free, open source, MIT</span>
-        <h3 class="cta__h">Slopstopper</h3>
-        <p class="cta__p">Removes AI slop and invisible watermark characters from any article, URL, file or pasted text, and rewrites it as human prose in your own voice. Runs as a Claude skill or standalone.</p>
-        <a class="cta__btn" href="https://github.com/geraldho81/slopstopper">github.com/geraldho81/slopstopper</a>
-      </div>
-    </div>
   </section>
 
 </article>
+
+
+<section class="finale" id="get">
+  <div class="finale__media" aria-hidden="true"><img src="assets/img/finale@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+  <div class="finale__body">
+    <h2 class="finale__h">Slopstopper</h2>
+    <p class="finale__p">Strips the invisible characters. Rewrites the prose so the statistical signal moves with it. Gives you back writing that reads like a person, in your own voice.</p>
+    <a class="finale__btn" href="https://github.com/geraldho81/slopstopper">Get it on GitHub</a>
+    <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone.</p>
+    <p class="finale__note">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it rather than guaranteeing its removal. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
+  </div>
+</section>
 
 <footer class="end">
   <h2>The paper</h2>
