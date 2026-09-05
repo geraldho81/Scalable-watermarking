@@ -85,7 +85,7 @@ export function initMotion() {
   }, { threshold: 0.1 });
 
   // figures and prose keep the quiet default
-  once('.fig, .chapter > p, .chapter > .sub', function (el) {
+  once('.fig, .chapter > p, .chapter > .sub, .inlinecta', function (el) {
     el.classList.add('is-in');
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
 }

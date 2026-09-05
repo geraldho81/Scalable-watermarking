@@ -894,3 +894,21 @@ code {
   .hero__by { font-size: 0.8125rem; }
   .hero__cue { bottom: 18px; }
 }
+
+/* a call to action inside the reading column, not only at the very end */
+.inlinecta {
+  margin: clamp(28px, 4vh, 44px) 0;
+  padding: clamp(22px, 3vw, 30px);
+  background: var(--wash); border: 1px solid rgba(110,140,255,0.26); border-radius: 5px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px;
+}
+.inlinecta__btn {
+  display: inline-block; text-decoration: none; white-space: nowrap;
+  background: var(--blue); color: #0A0B0F; font-weight: 600; font-size: 0.9375rem;
+  padding: 12px 20px; border-radius: 100px;
+  transition: background-color 0.2s var(--ease);
+}
+.inlinecta__btn:hover { background: var(--blue-2); color: #0A0B0F; }
+.inlinecta__meta { font-size: 0.875rem; color: var(--ink-2); }
+.motion .inlinecta { opacity: 0; transform: translateY(14px); transition: opacity 0.65s var(--ease), transform 0.75s var(--ease); }
+.motion .inlinecta.is-in { opacity: 1; transform: none; }

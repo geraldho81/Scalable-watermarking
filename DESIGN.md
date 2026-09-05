@@ -35,6 +35,7 @@ Twelve images, generated through the Grok CLI as one coherent series and stored 
 | `rewriter@2x.jpg` | ch 12 beat | an arm lifting one glowing seal off and pressing a different one on in the same motion |
 | `pipeline@2x.jpg` | ch 12 beat | five lit gates in a corridor, material entering disordered and leaving clean |
 | `needle@2x.jpg` | ch 12 beat | an instrument needle resting near but visibly not on zero |
+| `tool@2x.jpg` | ch 12 intro | a precision instrument under one light beside a clean stack of paper |
 | `finale@2x.jpg` | finale | the field settled and clean, all cobalt gone, one clear white beam straight through |
 
 The series rule: near-black void, cool greys, one electric cobalt, volumetric haze, 35mm grain, 16:9, no people, no legible sentences, no logos. Every band lays a left-weighted scrim over its image so reversed type holds contrast regardless of what the picture is doing underneath.
@@ -115,6 +116,10 @@ It is built as an act rather than a section: five full-bleed beats carrying one 
 The turn into it is signposted before it happens, not after. Chapter 11 used to end on a technical figure caption and then a full-bleed title card announced the pivot, which landed as a lurch. It now closes the paper in two sentences and hands over: "That is the paper... One of those limits turns out to be more useful than the rest, and it is the reason this page has one more chapter. Everything from here is mine rather than theirs." The attribution fence and the setup are the same move.
 
 It is fenced off honestly. A line above it states that everything before it is a reading of someone else's research and this part is the author's own, and the colophon still separates the site from DeepMind and Nature.
+
+**Slopstopper gets a proper introduction.** It used to be named first in passing inside a figure caption and explained only by implication. It now has its own title card ("This is Slopstopper"), a plain statement of what it is, three subheads covering Layer A, Layer B and the writing clean-up, and its own call to action inside the reading column rather than only at the very end. Everything after it is framed as how each layer earns its place.
+
+**The hedging is down to one line.** There were four separate passages telling the reader what the tool could not do, which read as apology rather than precision. The limits are the same, stated once and forward-facing: a rewrite moves the signal toward chance, how far depends on the text, nothing local can measure what is left because measuring needs the key, so the tool reports what it changed instead of claiming a score it has no way to compute. The remaining "cannot" statements are about the watermark and the rewriter, not about Slopstopper.
 
 Its interactive is a browser port of Slopstopper's Layer A (`js/strip.js`), built from the real tables in the tool's `scripts/text_unicode.py`: about sixty codepoints plus the full tag range U+E0001 to U+E007F, plus the lookalike-space map. It scans, names every codepoint it finds, and strips on demand, entirely client side. Emoji are exempted, because zero width joiners and variation selectors are load-bearing inside emoji sequences.
 

@@ -426,15 +426,41 @@
       <figcaption>The first kind is trivially detectable and trivially removable, and most people do not know it is there. The second is neither.</figcaption>
     </figure>
 
+    <div class="beat beat--mid">
+      <div class="beat__media" aria-hidden="true"><img src="assets/img/tool@2x.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="beat__body">
+        <h3 class="beat__h">This is Slopstopper.</h3>
+        <p class="beat__k">An open source tool that takes AI writing and hands you back prose.</p>
+      </div>
+    </div>
+
+    <p>Point it at an article, a URL, a file, or text you paste in. It does two jobs, one for each kind of mark, and it keeps them separate because they are different work.</p>
+
+    <h3 class="sub">Layer A finds the characters</h3>
+    <p>Around sixty codepoints plus the whole tag range: zero width joiners, bidi controls, variation selectors, the lookalike spaces. It names every one it finds and strips them. This part is instant, complete and provable, and you can run it yourself further down this page.</p>
+
+    <h3 class="sub">Layer B rewrites the words</h3>
+    <p>A token level paraphrase: changed clause order, changed connectors, changed sentence boundaries, run through a model you pick. This is the part that moves a statistical signal, and it is opt in, because rewriting your prose is a bigger thing to do than deleting characters nobody can see.</p>
+
+    <h3 class="sub">Both passes clean the writing</h3>
+    <p>On the way through, it removes what makes text read as machine written to a person rather than to a detector. The "it's not X, it's Y" tic, em dashes, throat clearing openers, fake profound closers, the rule of three. Your facts, numbers, names and voice stay exactly where they were.</p>
+
+    <div class="inlinecta">
+      <a class="inlinecta__btn" href="https://github.com/geraldho81/slopstopper">Get Slopstopper on GitHub</a>
+      <span class="inlinecta__meta">Free, MIT licensed. Runs as a Claude skill or from the command line.</span>
+    </div>
+
+    <p>The rest of this chapter is how each layer earns its place.</p>
+
     <div class="beat beat--right beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/hidden@2x.jpg" alt="" loading="lazy" decoding="async"></div>
       <div class="beat__body">
-        <h3 class="beat__h">There is junk in your text right now.</h3>
+        <h3 class="beat__h">Layer A, running here.</h3>
         <p class="beat__k">Characters you cannot see, that no spellcheck touches, sitting in anything a model wrote for you.</p>
       </div>
     </div>
 
-    <p>The box below runs the same character tables as Slopstopper's <code>text_unicode.py</code>, here in your browser. Nothing is uploaded and nothing is stored. Emoji are left alone, because they are built out of joiners on purpose and stripping those breaks them.</p>
+    <p>This is a port of Layer A, running the same character tables as Slopstopper's <code>text_unicode.py</code>, here in your browser. Nothing is uploaded and nothing is stored. Emoji are left alone, because they are built out of joiners on purpose and stripping those breaks them.</p>
 
     <figure class="fig fig--full" id="strip">
       <div class="stripper">
@@ -461,13 +487,13 @@
     <div class="beat beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/diffuse@2x.jpg" alt="" loading="lazy" decoding="async"></div>
       <div class="beat__body">
-        <h3 class="beat__h">Then the part nothing local can touch.</h3>
-        <p class="beat__k">There is no hidden character to find and no metadata to strip, because nothing was added to the file.</p>
+        <h3 class="beat__h">The second kind leaves nothing to find.</h3>
+        <p class="beat__k">No character, no metadata, nothing in the file. Which is why Layer B rewrites instead of scanning.</p>
       </div>
     </div>
 
-    <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that claims it detected and removed one is lying to you.</p>
-    <p>Moving that signal means replacing the words, at the token level, across the whole piece.</p>
+    <p>A statistical watermark puts nothing in the file. The signal is spread across hundreds of word choices under a key you do not have, so there is no scan that finds it and no switch that removes it. Any tool claiming it detected and removed one is lying to you.</p>
+    <p>Moving that signal means replacing the words, at the token level, across the whole piece. Which raises the obvious question of why that works at all.</p>
 
     <div class="beat beat--right beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/cascade@2x.jpg" alt="" loading="lazy" decoding="async"></div>
@@ -552,13 +578,13 @@
     <div class="beat beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/needle@2x.jpg" alt="" loading="lazy" decoding="async"></div>
       <div class="beat__body">
-        <h3 class="beat__h">What it will not do.</h3>
-        <p class="beat__k">The needle gets close to chance. It does not get to zero, and nothing does.</p>
+        <h3 class="beat__h">How far it gets.</h3>
+        <p class="beat__k">Close to chance, and honest about the gap that stays.</p>
       </div>
     </div>
 
-    <p>A rewrite reduces the statistical signal. It does not guarantee its removal, and no local tool can measure how much is left, because measuring it needs the key. Short text carries almost no signal either way. Long, high-entropy text carries more, and more of it survives.</p>
-    <p>Anything that tells you your text is now undetectable is selling you something, and this one says so in its own documentation.</p>
+    <p>A rewrite moves the statistical signal down toward chance. How far depends on the text: a short piece barely carries a signal to begin with, while long, freely written prose carries more and keeps more of it. Nothing running on your machine can measure what is left, because measuring needs the key.</p>
+    <p>So Slopstopper tells you what it changed and what it could not verify, rather than handing you a score it has no way to compute. Anything promising you undetectable text is selling you something.</p>
   </section>
 
 </article>
@@ -571,7 +597,7 @@
     <p class="finale__p">Strips the invisible characters. Rewrites the prose so the statistical signal moves with it. Gives you back writing that reads like a person, in your own voice.</p>
     <a class="finale__btn" href="https://github.com/geraldho81/slopstopper">Get it on GitHub</a>
     <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone, and you choose which model does the rewriting.</p>
-    <p class="finale__note">It will not make your text undetectable, and it does not claim to. That limit is written into the tool's own documentation.</p>
+    <p class="finale__note">Layer A is complete and provable. Layer B reduces a statistical signal by rewriting, and reports what it changed rather than claiming a result it cannot measure.</p>
   </div>
 </section>
 
