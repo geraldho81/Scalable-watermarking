@@ -112,6 +112,8 @@ The article closes with a pitch for Slopstopper, the site author's own tool. It 
 
 It is built as an act rather than a section: five full-bleed beats carrying one move of the argument each, then a full-viewport finale. The finale is the hero's answer, and it is the only place on the site with centred type: the hero's field of words is now settled and clean with the cobalt gone and one clear beam running through it, the wordmark at hero scale, one white button.
 
+The turn into it is signposted before it happens, not after. Chapter 11 used to end on a technical figure caption and then a full-bleed title card announced the pivot, which landed as a lurch. It now closes the paper in two sentences and hands over: "That is the paper... One of those limits turns out to be more useful than the rest, and it is the reason this page has one more chapter. Everything from here is mine rather than theirs." The attribution fence and the setup are the same move.
+
 It is fenced off honestly. A line above it states that everything before it is a reading of someone else's research and this part is the author's own, and the colophon still separates the site from DeepMind and Nature.
 
 Its interactive is a browser port of Slopstopper's Layer A (`js/strip.js`), built from the real tables in the tool's `scripts/text_unicode.py`: about sixty codepoints plus the full tag range U+E0001 to U+E007F, plus the lookalike-space map. It scans, names every codepoint it finds, and strips on demand, entirely client side. Emoji are exempted, because zero width joiners and variation selectors are load-bearing inside emoji sequences.

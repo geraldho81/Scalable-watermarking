@@ -592,10 +592,11 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
 /* ============================================================
    12 : the pitch
    ============================================================ */
-.byline-own {
-  font-size: 0.875rem !important; color: var(--ink-3);
-  padding-bottom: 1.4em; margin-bottom: 1.8em !important;
-  border-bottom: 1px solid var(--rule);
+/* the turn from somebody else's research to my own */
+.handover {
+  margin-top: 1.2em !important;
+  padding-top: 1.3em; border-top: 1px solid var(--rule);
+  color: var(--ink-2);
 }
 .sub {
   margin: 2.4em 0 0.7em; font-size: 1.0625rem; font-weight: 600;
@@ -861,11 +862,11 @@ code {
 }
 
 /* the quiet default, for prose and figures */
-.motion .fig, .motion .chapter > p, .motion .chapter > .sub, .motion .byline-own {
+.motion .fig, .motion .chapter > p, .motion .chapter > .sub {
   opacity: 0; transform: translateY(14px);
   transition: opacity 0.65s var(--ease), transform 0.75s var(--ease);
 }
-.motion .fig.is-in, .motion .chapter > p.is-in, .motion .chapter > .sub.is-in, .motion .byline-own.is-in {
+.motion .fig.is-in, .motion .chapter > p.is-in, .motion .chapter > .sub.is-in {
   opacity: 1; transform: none;
 }
 
