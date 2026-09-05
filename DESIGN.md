@@ -98,7 +98,11 @@ Every block gets the entrance that suits what it holds, never one identical fade
 
 Everything is additive: elements render finished, and `js/motion.js` only adds the `motion` class to the root once it has confirmed motion is wanted. On `prefers-reduced-motion` the class never lands and nothing moves.
 
-The top bar rides transparent over the hero and lands on white once past it. Each band's image drifts against the scroll at 7% of viewport travel. Bands, figures and the statement block fade up once on entry, from an already visible default.
+The top bar rides transparent for the first 40px of scroll only, then goes solid. Tying it to the height of the hero meant content slid under a transparent bar for the whole first screen.
+
+The active item is a `--blue` pill with near-black text, which reads on both bar states. It used to be a white pill whose label inherited `--ink`; when the site flipped dark that token went light and painted white on white.
+
+The hero reserves the bar's height as top padding and grows past `100svh` when it has to. Without that the headline runs under the bar on any viewport shorter than about 700px, which is most laptops. Each band's image drifts against the scroll at 7% of viewport travel. Bands, figures and the statement block fade up once on entry, from an already visible default.
 
 The authored moment: the knockout bracket resolves layer by layer as it scrolls into view, and the losing words drop into the "thrown out" row and stay there. Everything else is a 2px scroll progress bar and short state transitions. `prefers-reduced-motion` renders every bracket complete and disables the rest.
 

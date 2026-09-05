@@ -51,10 +51,9 @@ function initNav() {
   return function () {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.transform = 'scaleX(' + (max > 0 ? window.scrollY / max : 0) + ')';
-    if (hero) {
-      const over = hero.getBoundingClientRect().bottom > bar.offsetHeight + 8;
-      bar.classList.toggle('is-over', over);
-    }
+    // transparent only at the very top. Any scroll at all and the bar goes
+    // solid, so nothing slides underneath it half legible.
+    if (hero) bar.classList.toggle('is-over', window.scrollY < 40);
   };
 }
 

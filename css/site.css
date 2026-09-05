@@ -23,6 +23,7 @@
   --bone:   #737782;
   --strip:  #A8ABB4;
 
+  --barh:   56px;
   --measure: 40rem;
   --ease:    cubic-bezier(0.16, 1, 0.3, 1);
   --font:    'Poppins', system-ui, -apple-system, sans-serif;
@@ -119,12 +120,13 @@ b, strong { font-weight: 600; }
   transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
 }
 .topbar__list a:hover { color: var(--ink); background: var(--wash); }
-.topbar__list a.is-here { color: var(--paper); background: var(--ink); }
+.topbar__list a.is-here { color: #0A0B0F; background: var(--blue); }
 .rail__n { color: var(--ink-3); font-weight: 500; margin-right: 4px; }
-.topbar__list a.is-here .rail__n { color: rgba(10,11,15,0.45); }
+.topbar__list a.is-here .rail__n { color: rgba(10, 11, 15, 0.5); }
 .topbar__toggle { display: none; }
 
 @media (max-width: 900px) {
+  :root { --barh: 56px; }
   .topbar__nav {
     position: absolute; left: 0; right: 0; top: 100%;
     background: var(--paper); border-bottom: 1px solid var(--rule);
@@ -475,7 +477,10 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
   min-height: 100svh;
   display: grid; align-content: end;
   background: var(--night); color: #fff;
-  padding-bottom: clamp(88px, 14vh, 150px);
+  /* the bar is fixed, so the hero has to reserve its height or the headline
+     runs underneath it on any short viewport */
+  padding-top: calc(var(--barh) + clamp(20px, 5vh, 64px));
+  padding-bottom: clamp(72px, 12vh, 150px);
 }
 .hero__media { position: absolute; inset: 0; z-index: -2; }
 .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: 64% 50%; display: block; }
@@ -483,7 +488,8 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
   content: ''; position: absolute; inset: 0; z-index: -1;
   background:
     linear-gradient(90deg, rgba(7,8,11,0.95) 0%, rgba(7,8,11,0.8) 38%, rgba(7,8,11,0.22) 74%, rgba(7,8,11,0.6) 100%),
-    linear-gradient(0deg, rgba(7,8,11,0.92) 0%, rgba(7,8,11,0) 48%);
+    linear-gradient(0deg, rgba(7,8,11,0.92) 0%, rgba(7,8,11,0) 48%),
+    linear-gradient(180deg, rgba(7,8,11,0.72) 0%, rgba(7,8,11,0) 130px);
 }
 .hero__body { width: 100%; max-width: 1240px; margin: 0 auto; padding-inline: clamp(20px, 4vw, 44px); }
 .hero__h {
@@ -521,8 +527,9 @@ input[type="range"] { width: 100%; accent-color: var(--blue); }
 .topbar.is-over .topbar__mark { color: #fff; }
 .topbar.is-over .topbar__list a { color: rgba(255,255,255,0.66); }
 .topbar.is-over .topbar__list a:hover { color: #fff; background: rgba(255,255,255,0.12); }
-.topbar.is-over .topbar__list a.is-here { background: #fff; color: var(--ink); }
+.topbar.is-over .topbar__list a.is-here { background: var(--blue); color: #0A0B0F; }
 .topbar.is-over .rail__n { color: rgba(255,255,255,0.45); }
+.topbar.is-over .topbar__list a.is-here .rail__n { color: rgba(10, 11, 15, 0.5); }
 .topbar.is-over .topbar__toggle { color: #fff; border-color: rgba(255,255,255,0.35); }
 
 /* ---- chapter beats ---- */
