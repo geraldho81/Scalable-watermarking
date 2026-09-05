@@ -1,5 +1,6 @@
 import { initBracket, initScorer, initBench, initDice, initRewrite } from './tournament.js';
 import { initStrip } from './strip.js';
+import { initMotion } from './motion.js';
 
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -103,21 +104,6 @@ function initParallax() {
   };
 }
 
-/* one entrance per block, from an already visible default */
-function initReveal() {
-  if (REDUCED) return;
-  const targets = document.querySelectorAll('.beat__body, .band__inner, .fig, .finale__body');
-  targets.forEach(function (t) { t.classList.add('reveal'); });
-  const io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      e.target.classList.add('is-in');
-      io.unobserve(e.target);
-    });
-  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-  targets.forEach(function (t) { io.observe(t); });
-}
-
 /* the still carries the hero; the loop fades in only once it can actually play,
    and never on reduced motion, a save-data hint, or a metered connection */
 function initHeroVideo() {
@@ -151,7 +137,7 @@ function initHeroVideo() {
 
 async function boot() {
   const handlers = [initNav(), initParallax()];
-  initReveal();
+  initMotion();
 
   initDice();
   initScorer();

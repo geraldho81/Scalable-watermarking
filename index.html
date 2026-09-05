@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One Word at a Time: how a watermark hides inside AI writing</title>
+<title>Watermarked: how a signature hides inside the words an AI picks</title>
 <meta name="description" content="A reading of SynthID-Text, the text watermarking scheme published in Nature in October 2024. How Google DeepMind hid a signature inside the way Gemini chooses its words, and how anyone with the key can read it back.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta name="color-scheme" content="light">
@@ -19,7 +19,7 @@
 <div class="progress" id="railProgress" aria-hidden="true"></div>
 
 <header class="topbar" id="rail">
-  <a class="topbar__mark" href="#top">One Word at a Time</a>
+  <a class="topbar__mark" href="#top">Watermarked</a>
   <nav class="topbar__nav" aria-label="Contents">
     <ol class="topbar__list" id="railFrames">
       <li><a href="#s01" data-rail="s01"><span class="rail__n">01</span> How AI writes</a></li>
@@ -52,7 +52,7 @@
       </video>
     </div>
     <div class="hero__body">
-      <h1 class="hero__h">Every word an AI writes was chosen out of thousands.</h1>
+      <h1 class="hero__h"><span style="--i:0">Every word an AI writes</span> <span style="--i:1">was chosen out of thousands.</span></h1>
       <p class="hero__stand">Some of those choices are a signature. This is how Google DeepMind hid one inside Gemini, why twenty million people did not notice, and how anyone with the key can read it back without touching the model.</p>
       <p class="hero__by">A reading of <cite>Scalable watermarking for identifying large language model outputs</cite>, Dathathri et al., <em>Nature</em> 634, 818-823, 23 October 2024. Roughly 15 minutes.</p>
     </div>
@@ -95,8 +95,8 @@
         <p class="beat__k">Archives do not scale. Detectors accuse the wrong people.</p>
       </div>
     </div>
-    <p>One approach is to store everything every model has produced, then check new writing against the archive. It works the way a phone book works. It also means keeping all of it forever, with every privacy problem that follows, and coordinating that archive across every company running a model.</p>
-    <p>The other is a classifier that reads text and guesses. These go stale every time models improve, cost money to retrain, and perform badly on writing they were not trained for. They misfire hardest on people writing in a second language. Students have been accused of cheating on that output.</p>
+    <p>One approach is to store everything every model has produced and check new writing against the archive. It works the way a phone book works. It also means keeping all of it forever, with every privacy problem that follows, coordinated across every company running a model.</p>
+    <p>The other is a classifier that reads text and guesses. These go stale every time models improve, cost money to retrain, and do badly on writing they were not trained for. They misfire hardest on people writing in a second language, and students have been accused of cheating on that output.</p>
     <p>So the paper changes the question. Instead of recognising AI text afterwards, can something be left behind as it is written?</p>
   </section>
 
@@ -211,7 +211,7 @@
 
     <div class="band">
       <div class="band__inner">
-        <div class="band__stat"><span class="band__v">20,000,000</span><span class="band__l">real Gemini responses served by the watermarked model</span></div>
+        <div class="band__stat"><span class="band__v" data-count="20000000">20,000,000</span><span class="band__l">real Gemini responses served by the watermarked model</span></div>
         <div class="band__pair">
           <div><span class="band__d">+0.01%</span><span class="band__l">difference in thumbs-up rate, watermarked higher</span></div>
           <div><span class="band__d">&minus;0.02%</span><span class="band__l">difference in thumbs-down rate, watermarked lower</span></div>
@@ -234,7 +234,7 @@
     </div>
   </div>
     <p>To check a piece of text you need the text and the key. You do not need the model. You do not need to run anything expensive. You do not need to ask Google.</p>
-    <p>Walk the text word by word. At each one, take the four words before it, mix in the key, get the seed, and look up which coin that word was handed. Write down the zero or the one. Do that for every word and every set of dice, then take the average.</p>
+    <p>Walk the text word by word. At each one, take the four words before it, mix in the key, get the seed, and look up which coin that word was handed. Do that for every word and every set of dice, then take the average.</p>
     <p>Text nobody watermarked averages about 0.5, because nobody was steering the coins. Watermarked text averages higher, because every word on the page won its way there. Then you draw a line and say: above this, watermarked.</p>
 
     <figure class="fig fig--wide" id="scorer" data-tournament="score">
@@ -264,7 +264,7 @@
           <p class="scorer__tradeoff" id="scorerTradeoff">Lower the line and you catch more watermarked text, but you start accusing innocent writing. Raise it and the reverse.</p>
         </div>
       </div>
-      <figcaption>Every g-value here is computed live in your browser with a real seeded hash. There is no model behind it, so the sample texts are fixed, and the watermarking key is fixed too. Worth knowing: at this length the score is noisy, and some keys separate these three samples far better than others. That is the paper's point about short text, visible in the demo built to show it. The paper writes this as Score(x), the mean g-value across every position and every layer.</figcaption>
+      <figcaption>Every g-value is computed live in your browser with a real seeded hash and no model behind it, so the samples and the key are fixed. At this length the score is noisy, and some keys separate the three samples far better than others: the paper's point about short text, showing up in the demo built to explain it. The paper calls this Score(x).</figcaption>
     </figure>
   </section>
 
@@ -303,7 +303,7 @@
     </div>
     <p>A watermark that slows the model down does not get deployed, whatever its merits. Much of this paper is an engineering paper about that.</p>
     <p>In production the tournament runs thirty rounds deep, not three. More rounds means more coin flips per word, so more evidence and a steadier score. The benefit tails off with depth, so thirty is a chosen stopping point rather than a limit.</p>
-    <p>They also fitted it to speculative sampling, the trick where a small fast model guesses several words ahead and the big model checks its work. That combination is how large systems actually run, and nobody had made watermarking work with it before. SynthID-Text runs in Gemini and Gemini Advanced today, and the code is public.</p>
+    <p>They also fitted it to speculative sampling, where a small fast model guesses several words ahead and the big model checks its work. That is how large systems actually run, and nobody had made watermarking work with it before. SynthID-Text runs in Gemini and Gemini Advanced today, and the code is public.</p>
 
     <figure class="fig fig--wide">
       <div data-chart="latency"></div>
@@ -322,7 +322,7 @@
   </div>
     <p>The paper is unusually direct about its own limits, and any honest reading has to carry them. They decide what the method is for.</p>
     <ol class="limits">
-      <li><h3>Paraphrasing removes it</h3><p>Run watermarked text through another model and ask for a rewrite, and the mark mostly goes. Heavy editing by hand does the same. Light edits survive, because the score is an average and a few changed words barely move it.</p></li>
+      <li><h3>Paraphrasing removes it</h3><p>Run watermarked text through another model and ask for a rewrite, and the mark mostly goes. Heavy editing by hand does the same. Light edits survive, because the score is an average.</p></li>
       <li><h3>It only works if the writer cooperates</h3><p>The watermark has to be applied at the moment of generation, by whoever is running the model. Anyone running an open-weight model on their own hardware does not switch it on. The paper names this as a problem that gets harder as open models spread.</p></li>
       <li><h3>It can be attacked</h3><p>Stealing, spoofing and scrubbing are live research problems. Someone able to probe the system enough might learn the pattern well enough to strip it out, or worse, stamp it onto text a human wrote.</p></li>
       <li><h3>Short text carries nothing</h3><p>A sentence has almost no evidence in it. A tweet is out of reach. So is a headline, a caption, or a factual answer with only one sensible phrasing.</p></li>
@@ -393,7 +393,7 @@
     <p class="byline-own">Everything above this line is a reading of somebody else's research. This last part is mine.</p>
 
     <p>In section 07 you moved a real score. Watermarked text sat at <b>0.618</b>. Paraphrased, the same text fell to <b>0.493</b>, close enough to chance that no usable threshold would flag it. You ran that arithmetic yourself, a few thousand words ago.</p>
-    <p>It works because of the mechanism this whole page has been about. The mark is a record of which words got chosen, held in the choices themselves, not stitched into the sentence. Replace the words and there is no record. So the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
+    <p>The mark is a record of which words got chosen, held in the choices themselves, not stitched into the sentence. Replace the words and there is no record. So the only thing that removes a generative watermark is the one thing nobody wants to hear: actually rewriting the prose.</p>
     <p>Before any of that, there is a much dumber problem sitting in your text right now.</p>
 
     <div class="beat beat--mid">
@@ -466,7 +466,7 @@
     </div>
 
     <p>That box cannot see a statistical watermark, and neither can anything else you run on your own machine. The signal is spread across hundreds of word choices under a key you do not have. Any tool that claims it detected and removed one is lying to you.</p>
-    <p>Moving that signal means replacing the words, at the token level, across the whole piece. And there is a trap: a rewrite by a model that watermarks its own output just swaps one company's mark for another's.</p>
+    <p>Moving that signal means replacing the words, at the token level, across the whole piece.</p>
 
     <div class="beat beat--right beat--mid">
       <div class="beat__media" aria-hidden="true"><img src="assets/img/cascade@2x.jpg" alt="" loading="lazy" decoding="async"></div>
@@ -476,8 +476,8 @@
       </div>
     </div>
 
-    <p>This is the part that makes a rewrite work, and it follows from machinery you have already seen. A word's coin depends on the word and on the four words before it, so replacing one word breaks two things at once. You throw away a token that won its tournament and put in one that won nothing, which drags that position back to chance. You also change the context for the next four positions, so their coins get re-rolled whether or not you touched them.</p>
-    <p>One replacement damages up to five positions. That is the whole reason light editing survives and a paraphrase does not. The score is an average, so a few changed words barely move it, but a rewrite that touches most of the sentence drags the context along with it.</p>
+    <p>It follows from machinery you have already seen. A word's coin depends on the word and the four before it, so replacing one word breaks two things. You throw away a token that won its tournament and put in one that won nothing, which drags that position back to chance. And you change the context for the next four positions, so their coins re-roll whether or not you touched them.</p>
+    <p>One replacement damages up to five positions. The score is an average, so a few changed words barely move it, but a rewrite that touches most of the sentence drags the context with it.</p>
 
     <figure class="fig fig--full" id="rewrite">
       <div class="dial">
@@ -498,7 +498,7 @@
           </div>
         </div>
       </div>
-      <figcaption>Blue words were swapped. Grey words were left exactly as they were, and their coins changed anyway, because the context in front of them moved. That third number is the cascade, and it is why a paraphrase collapses a score that survives light editing.</figcaption>
+      <figcaption>Blue words were swapped. Grey words were left exactly as they were, and their coins changed anyway, because the context in front of them moved. That third number is the cascade.</figcaption>
     </figure>
 
     <div class="beat beat--mid">
@@ -518,7 +518,7 @@
     <ol class="options">
       <li>
         <h4>An older Claude</h4>
-        <p>Marking applies only to models launched on or after 2 August 2026, which so far means Fable 5.1 and Mythos 5.1. Everything Anthropic shipped before that date comes out unmarked: Opus 5, Sonnet 5, Fable 5, Opus 4.8, Haiku 4.5. Anthropic has said it is working to add marking to the earlier models as the transition period allows, without giving a date, so this is a gap that is closing rather than a way around the rule.</p>
+        <p>Marking applies only to models launched on or after 2 August 2026, so far Fable 5.1 and Mythos 5.1. Everything Anthropic shipped before then comes out unmarked: Opus 5, Sonnet 5, Fable 5, Opus 4.8, Haiku 4.5. Anthropic says it is working to mark the earlier models and has given no date, so this is a gap closing rather than a way around the rule.</p>
       </li>
       <li>
         <h4>Open weights on your own hardware</h4>
@@ -526,7 +526,7 @@
       </li>
       <li>
         <h4>A hosted vendor that does not mark</h4>
-        <p>Grok qualifies for now, because xAI did not sign the EU code of practice and does not mark its text. The least durable option of the three, since any vendor can adopt marking at any point under Article 50, which is why the tool checks the current position rather than trusting a name.</p>
+        <p>Grok qualifies for now, because xAI did not sign the EU code of practice and does not mark its text. The least durable of the three, since any vendor can adopt marking under Article 50, which is why the tool checks rather than trusting a name.</p>
       </li>
     </ol>
 
@@ -570,7 +570,7 @@
     <p class="finale__p">Strips the invisible characters. Rewrites the prose so the statistical signal moves with it. Gives you back writing that reads like a person, in your own voice.</p>
     <a class="finale__btn" href="https://github.com/geraldho81/slopstopper">Get it on GitHub</a>
     <p class="finale__meta">Free, open source, MIT. Runs as a Claude skill or standalone, and you choose which model does the rewriting.</p>
-    <p class="finale__note">It will not make your text undetectable, and it does not claim to. Short text carries almost no statistical signal either way; long text carries more, and a rewrite reduces it without removing it. That limit is written into the tool's own documentation, and any project promising otherwise is selling something.</p>
+    <p class="finale__note">It will not make your text undetectable, and it does not claim to. That limit is written into the tool's own documentation.</p>
   </div>
 </section>
 

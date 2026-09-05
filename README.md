@@ -1,4 +1,4 @@
-# One Word at a Time
+# Watermarked
 
 An interactive reading of **"Scalable watermarking for identifying large language model outputs"** (Dathathri et al., *Nature* 634, 818-823, 23 October 2024), the paper describing SynthID-Text.
 

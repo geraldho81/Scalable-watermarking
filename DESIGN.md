@@ -5,6 +5,10 @@
 Live: https://scalable-watermarking.vercel.app
 Repo: https://github.com/geraldho81/Scalable-watermarking
 
+## Name
+
+The site is called **Watermarked**. One word, the subject itself, and it holds up as a wordmark in a 40px bar on a phone, which the previous name did not.
+
 ## What this is
 
 An all-black cinematic long-read. Four generated images carry a dark visual spine: a full-bleed hero, then three full-bleed chapter openers, with a dark statement band for the twenty-million-response result. Between them the article body is white, one reading measure, typography-led. Dark beat, light read, dark beat.
@@ -80,6 +84,19 @@ Chapter numbers hang in the left margin above 1100px and sit inline below it. Th
 
 ## Motion
 
+Every block gets the entrance that suits what it holds, never one identical fade on all of them. The old blanket reveal was exactly that and read as no motion at all.
+
+- The hero's two headline lines, standfirst, byline and cue rise in sequence on load.
+- Band bodies stagger their number, heading and standfirst like a title card.
+- The odds bars grow from zero to their value, because they are data.
+- The twenty million counts up from zero, because the number is the argument.
+- Steps, limits, options and comparison columns arrive item by item.
+- The sixty-four coin cells land as a wave, which is what a vocabulary being assigned in one pass looks like.
+- In the scorer and the dial, evidence lights through the passage in reading order.
+- Prose and figures keep the quiet default.
+
+Everything is additive: elements render finished, and `js/motion.js` only adds the `motion` class to the root once it has confirmed motion is wanted. On `prefers-reduced-motion` the class never lands and nothing moves.
+
 The top bar rides transparent over the hero and lands on white once past it. Each band's image drifts against the scroll at 7% of viewport travel. Bands, figures and the statement block fade up once on entry, from an already visible default.
 
 The authored moment: the knockout bracket resolves layer by layer as it scrolls into view, and the losing words drop into the "thrown out" row and stay there. Everything else is a 2px scroll progress bar and short state transitions. `prefers-reduced-motion` renders every bracket complete and disables the rest.
@@ -125,6 +142,10 @@ Chapter 12 names what to actually point the rewrite at, because "use a model tha
 
 Verified against Anthropic's own documentation before publishing rather than taken from the skill file.
 
+
+## Mobile hero
+
+Portrait crops a 16:9 render hard, and the footage dollies in, so the bright cobalt word grows and drifts wherever it likes. Object-position cannot chase a moving subject. Below 760px the footage is dimmed instead (`brightness(0.46)` on the video, `0.72` on the still) and the scrim runs bottom to top rather than left to right. Motion survives, the type never has to fight it.
 
 ## The hero loop
 
